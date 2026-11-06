@@ -91,11 +91,31 @@ val checkLegacyBukkitApi by tasks.registering(JavaCompile::class) {
     options.release.set(8)
 }
 
-/** The resource pack, generated from the plugin's own combo and blade definitions (see tools/ and docs/PACK.md). */
+/*
+ * The resource pack, generated from the plugin's own moves and blades (src/tools, docs/PACK.md): manifests always,
+ * placeholder art only where none exists. checkPack fails when the committed manifests are not what the code makes.
+ */
+val tools: SourceSet = sourceSets.create("tools") {
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
+}
+sourceSets.test {
+    compileClasspath += tools.output
+    runtimeClasspath += tools.output
+}
+
 val generatePack by tasks.registering(JavaExec::class) {
-    description = "Generates the resource pack into resourcepack/ (models, animations, manifests, textures)."
+    description = "Generates the resource pack into resourcepack/ (manifests; art only where missing)."
     group = "build"
-    classpath = sourceSets.test.get().runtimeClasspath
+    classpath = tools.runtimeClasspath
     mainClass.set("com.akashic.overkill.pack.PackGenerator")
-    args(rootProject.file("resourcepack").absolutePath)
+    args(layout.projectDirectory.dir("resourcepack").asFile.absolutePath)
+}
+
+val checkPack by tasks.registering(JavaExec::class) {
+    description = "Fails when resourcepack/ manifests differ from what the moves and blades generate."
+    group = "verification"
+    classpath = tools.runtimeClasspath
+    mainClass.set("com.akashic.overkill.pack.PackCheck")
+    args(layout.projectDirectory.dir("resourcepack").asFile.absolutePath)
 }

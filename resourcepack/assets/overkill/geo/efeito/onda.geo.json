@@ -1,0 +1,138 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.overkill.onda",
+        "texture_width": 32,
+        "texture_height": 32,
+        "visible_bounds_width": 4,
+        "visible_bounds_height": 4,
+        "visible_bounds_offset": [0, 1, 0]
+      },
+      "bones": [
+        {
+          "name": "raiz",
+          "pivot": [0, 0, 0]
+        },
+        {
+          "name": "arco_0",
+          "parent": "raiz",
+          "pivot": [-17.73, 0, -14.87],
+          "cubes": [
+            {
+              "origin": [-21.23, -1, -15.37],
+              "size": [7, 2, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, -80, 0]
+        },
+        {
+          "name": "arco_1",
+          "parent": "raiz",
+          "pivot": [-15.59, 0, -9],
+          "cubes": [
+            {
+              "origin": [-19.09, -1.5, -9.5],
+              "size": [7, 3, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, -60, 0]
+        },
+        {
+          "name": "arco_2",
+          "parent": "raiz",
+          "pivot": [-11.57, 0, -4.21],
+          "cubes": [
+            {
+              "origin": [-15.07, -2, -4.71],
+              "size": [7, 4, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, -40, 0]
+        },
+        {
+          "name": "arco_3",
+          "parent": "raiz",
+          "pivot": [-6.16, 0, -1.09],
+          "cubes": [
+            {
+              "origin": [-9.66, -2.5, -1.59],
+              "size": [7, 5, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, -20, 0]
+        },
+        {
+          "name": "arco_4",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-3.5, -3, -0.5],
+              "size": [7, 6, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, 0, 0]
+        },
+        {
+          "name": "arco_5",
+          "parent": "raiz",
+          "pivot": [6.16, 0, -1.09],
+          "cubes": [
+            {
+              "origin": [2.66, -2.5, -1.59],
+              "size": [7, 5, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, 20, 0]
+        },
+        {
+          "name": "arco_6",
+          "parent": "raiz",
+          "pivot": [11.57, 0, -4.21],
+          "cubes": [
+            {
+              "origin": [8.07, -2, -4.71],
+              "size": [7, 4, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, 40, 0]
+        },
+        {
+          "name": "arco_7",
+          "parent": "raiz",
+          "pivot": [15.59, 0, -9],
+          "cubes": [
+            {
+              "origin": [12.09, -1.5, -9.5],
+              "size": [7, 3, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, 60, 0]
+        },
+        {
+          "name": "arco_8",
+          "parent": "raiz",
+          "pivot": [17.73, 0, -14.87],
+          "cubes": [
+            {
+              "origin": [14.23, -1, -15.37],
+              "size": [7, 2, 1],
+              "uv": [0, 0]
+            }
+          ],
+          "rotation": [0, 80, 0]
+        }
+      ]
+    }
+  ]
+}

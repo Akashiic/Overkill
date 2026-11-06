@@ -1,0 +1,212 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.braco.parada": {
+      "loop": true,
+      "animation_length": 3,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "1.5": [-18, 0, 7],
+            "3.0": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.sacar": {
+      "animation_length": 0.5,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [10, 0, -10],
+            "0.3": [-60, 0, 0],
+            "0.5": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.golpe_1": {
+      "animation_length": 0.7,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.1": [-90, 50, 0],
+            "0.2": [-80, -60, 0],
+            "0.7": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.golpe_2": {
+      "animation_length": 0.7,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.1": [-80, -60, 0],
+            "0.2": [-90, 50, 0],
+            "0.7": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.golpe_3": {
+      "animation_length": 0.8,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.15": [-170, 0, 0],
+            "0.25": [-40, 0, 0],
+            "0.8": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.golpe_4": {
+      "animation_length": 1.05,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.2": [-90, 80, 0],
+            "0.35": [-90, -90, 0],
+            "1.05": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.estocada": {
+      "animation_length": 0.85,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.15": [-60, 0, 0],
+            "0.35": [-95, 0, 0],
+            "0.85": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.lancamento": {
+      "animation_length": 0.85,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.15": [-10, 0, 0],
+            "0.25": [-170, 0, 0],
+            "0.85": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.aereo_1": {
+      "animation_length": 0.65,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.1": [-90, 50, 0],
+            "0.2": [-80, -60, 0],
+            "0.65": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.aereo_2": {
+      "animation_length": 0.65,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.1": [-80, -60, 0],
+            "0.2": [-90, 50, 0],
+            "0.65": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.aereo_3": {
+      "animation_length": 0.85,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.15": [-170, 0, 0],
+            "0.25": [-40, 0, 0],
+            "0.85": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.queda": {
+      "animation_length": 0.9,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.1": [-170, 0, 0],
+            "0.4": [-20, 0, 0],
+            "0.9": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.iaido": {
+      "animation_length": 0.65,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.05": [-30, -40, 0],
+            "0.15": [-90, 70, 0],
+            "0.65": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.corte_dimensional": {
+      "animation_length": 0.9,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.315": [-30, -40, 0],
+            "0.495": [-90, 70, 0],
+            "0.9": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.onda": {
+      "animation_length": 0.9,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.315": [-170, 0, 0],
+            "0.495": [-40, 0, 0],
+            "0.9": [-15, 0, 5]
+          }
+        }
+      }
+    },
+    "animation.braco.corte_circular": {
+      "animation_length": 0.9,
+      "bones": {
+        "braco_direito": {
+          "rotation": {
+            "0.0": [-15, 0, 5],
+            "0.315": [-90, 80, 0],
+            "0.495": [-90, -90, 0],
+            "0.9": [-15, 0, 5]
+          }
+        }
+      }
+    }
+  }
+}

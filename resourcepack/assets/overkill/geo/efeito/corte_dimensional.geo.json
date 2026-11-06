@@ -1,0 +1,131 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.overkill.corte_dimensional",
+        "texture_width": 32,
+        "texture_height": 64,
+        "visible_bounds_width": 6,
+        "visible_bounds_height": 6,
+        "visible_bounds_offset": [0, 1.5, 0]
+      },
+      "bones": [
+        {
+          "name": "raiz",
+          "pivot": [0, 0, 0]
+        },
+        {
+          "name": "nucleo",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-3, -3, -3],
+              "size": [6, 6, 6],
+              "uv": [0, 0]
+            }
+          ]
+        },
+        {
+          "name": "corte_0",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-74, 164, 15]
+        },
+        {
+          "name": "corte_1",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-86, 100, 64]
+        },
+        {
+          "name": "corte_2",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-62, 329, 0]
+        },
+        {
+          "name": "corte_3",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [24, 120, 42]
+        },
+        {
+          "name": "corte_4",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-42, 151, -35]
+        },
+        {
+          "name": "corte_5",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-68, 321, -72]
+        },
+        {
+          "name": "corte_6",
+          "parent": "raiz",
+          "pivot": [0, 0, 0],
+          "cubes": [
+            {
+              "origin": [-0.5, -24, -0.5],
+              "size": [1, 48, 1],
+              "uv": [0, 12],
+              "inflate": 0.2
+            }
+          ],
+          "rotation": [-63, 279, 52]
+        }
+      ]
+    }
+  ]
+}

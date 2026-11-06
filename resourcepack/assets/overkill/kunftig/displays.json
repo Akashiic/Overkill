@@ -1,0 +1,59 @@
+{
+  "_formato": 1,
+  "exibicoes": {
+    "corte_dimensional": {
+      "geo": "overkill:geo/efeito/corte_dimensional.geo.json",
+      "animacoes": "overkill:animations/efeito/corte_dimensional.animation.json",
+      "textura": "overkill:textures/efeito/corte.png",
+      "estados": {
+        "cortar": {
+          "animacao": "animation.corte_dimensional.cortar"
+        }
+      },
+      "luz": ["nucleo", "corte_0", "corte_1", "corte_2", "corte_3", "corte_4", "corte_5", "corte_6"],
+      "translucido": ["nucleo", "corte_0", "corte_1", "corte_2", "corte_3", "corte_4", "corte_5", "corte_6"],
+      "distancia": 64
+    },
+    "onda": {
+      "geo": "overkill:geo/efeito/onda.geo.json",
+      "animacoes": "overkill:animations/efeito/onda.animation.json",
+      "textura": "overkill:textures/efeito/onda.png",
+      "estados": {
+        "voar": {
+          "animacao": "animation.onda.voar",
+          "laco": true
+        }
+      },
+      "luz": ["arco_0", "arco_1", "arco_2", "arco_3", "arco_4", "arco_5", "arco_6", "arco_7", "arco_8"],
+      "translucido": ["arco_0", "arco_1", "arco_2", "arco_3", "arco_4", "arco_5", "arco_6", "arco_7", "arco_8"],
+      "distancia": 64
+    },
+    "corte_circular": {
+      "geo": "overkill:geo/efeito/corte_circular.geo.json",
+      "animacoes": "overkill:animations/efeito/corte_circular.animation.json",
+      "textura": "overkill:textures/efeito/corte.png",
+      "estados": {
+        "girar": {
+          "animacao": "animation.corte_circular.girar"
+        }
+      },
+      "luz": ["segmento_0", "segmento_1", "segmento_2", "segmento_3", "segmento_4", "segmento_5", "segmento_6", "segmento_7", "segmento_8", "segmento_9", "segmento_10", "segmento_11", "segmento_12", "segmento_13", "segmento_14", "segmento_15"],
+      "translucido": ["segmento_0", "segmento_1", "segmento_2", "segmento_3", "segmento_4", "segmento_5", "segmento_6", "segmento_7", "segmento_8", "segmento_9", "segmento_10", "segmento_11", "segmento_12", "segmento_13", "segmento_14", "segmento_15"],
+      "distancia": 48
+    },
+    "espada_invocada": {
+      "geo": "overkill:geo/efeito/espada_invocada.geo.json",
+      "animacoes": "overkill:animations/efeito/espada_invocada.animation.json",
+      "textura": "overkill:textures/efeito/espada.png",
+      "estados": {
+        "voar": {
+          "animacao": "animation.espada_invocada.voar",
+          "laco": true
+        }
+      },
+      "luz": ["espada"],
+      "translucido": ["espada"],
+      "distancia": 48
+    }
+  }
+}
