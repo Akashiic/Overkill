@@ -4,6 +4,25 @@ Data do estudo: 2026-11-06.
 
 **Base de evidência.** Este estudo se apoia em: (a) a página do repositório `flammpfeil/SlashBlade_2` (apenas a fachada: não foi lido o código-fonte); (b) páginas públicas de mods (CurseForge, Modrinth e similares); (c) o `README.md`, o `docs/API.md` e o `docs/rodmodels/README.md` do Künftig (não foi lido o código-fonte do Künftig). Onde algo é inferência, está marcado como **a verificar**.
 
+> **Estado em 2026-11-06: implementado.** As lacunas da seção 4 viraram recursos da API 9 do Künftig e o plugin
+> existe. Resumo do que virou cada uma:
+>
+> | # | Lacuna | Resultado |
+> |---|---|---|
+> | 1 | Canal de entrada | `KunftigInput` / `KunftigInputEvent` (canal `kunftig:input`), validado e com limite por jogador |
+> | 2 | Previsão de golpe | `ao_atacar` no manifesto: o cliente começa o golpe no clique e o servidor confirma sem reiniciar |
+> | 3 | API genérica para itens na mão | Mantida a `KunftigRods` (o manifesto já era genérico); o modelo da lâmina usa `estados.<s>.modelo` |
+> | 4 | Projéteis | `Display#setMotion` (voo com uma mensagem), `moveTo` com deslize e `setRotation` com pitch e roll |
+> | 5 | HUD de rank | `KunftigHud` (texto, barra, imagem na tela) |
+> | 6 | Lock-on | `KunftigCamera` (câmera segue o alvo, marcador) |
+> | 7 | Desempenho com muitos jogadores | **Ainda não medido** num servidor com vários jogadores |
+> | 8 | Movimento | Investida, esquiva, golpes aéreos e queda por `setVelocity` no servidor; **sensação a validar online** |
+> | 9 | Dano em mobs de mods | Dano como do jogador (passa pelos eventos), tamanho do alvo pela altura dos olhos; **a validar com mobs de mods** |
+>
+> Correções a este estudo, confirmadas no código do Künftig: o manifesto exige a chave `modelos`; o controlador de
+> `transicao_ticks` é sempre `vara`, mesmo com `modelo`; o ciclo automático da vara não atrapalha a espada (só `sacar`
+> dispara). O Bukkit 1.7.10 não tem `PrepareAnvilEvent`: o refino virou comando. Mecânicas: [`COMBATE.md`](COMBATE.md).
+
 ---
 
 ## 1. O que é o SlashBlade

@@ -4,6 +4,12 @@ Data: 2026-11-06. Continuação de [`ESTUDO.md`](ESTUDO.md), seção 8.
 
 **Estado deste documento: rascunho de design.** Não há código. Tudo o que é valor numérico abaixo é **valor de partida, a calibrar no jogo**. Tudo o que depende de comportamento do Künftig que a documentação não descreve está marcado **a verificar**. A fonte de verdade para a sintaxe exata do manifesto é o pack do AkashicFishing (`tools/rod3d` e `tools/peixe3d`) e o código do Künftig, que ainda não foram lidos para este documento.
 
+> **Histórico.** Este foi o design da primeira fatia. A implementação foi além: previsão de golpe no cliente, canal de
+> entrada, slash arts, rank e lock-on já existem (veja o [`README`](../README.md) e [`COMBATE.md`](COMBATE.md)).
+> Correções ao rascunho abaixo: o manifesto precisa da chave `"modelos"` em volta dos modelos; `transicao_ticks` usa o
+> controlador `"vara"` (com `"modelo"` a mistura é ignorada); o item base escolhido foi a espada de ouro, com todas as
+> espadas listadas em `itens`; `kills` é INTEGER; o golpe vanilla é cancelado para itens-lâmina.
+
 ---
 
 ## 1. Objetivo e escopo

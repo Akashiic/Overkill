@@ -1,0 +1,73 @@
+name: Build and test
+
+on:
+  push:
+    branches: [ main, 'claude/**' ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Kunftig ref (gradle.properties, kunftigRef)
+        id: kunftig
+        run: echo "ref=$(grep '^kunftigRef=' gradle.properties | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
+
+      # kunftig-api is compiled from its sources (compile-only: at runtime it comes from the Kunftig mod).
+      - uses: actions/checkout@v4
+        with:
+          repository: Akashiic/Kunftig
+          ref: ${{ steps.kunftig.outputs.ref }}
+          path: kunftig
+          sparse-checkout: |
+            api/src/main/java
+            scripts
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Version for untagged builds
+        if: github.ref_type != 'tag'
+        run: echo "VERSION=0.1.0-dev-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Version for tags
+        if: github.ref_type == 'tag'
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Bukkit 1.7.10 API (Thermos/Crucible) for the compatibility gate
+        run: kunftig/scripts/build-legacy-bukkit-api.sh build/legacy-bukkit/bukkit-1.7.10.jar
+
+      - name: Build, tests, resource pack check, Bukkit 1.7.10 gate
+        run: >
+          ./gradlew build checkLegacyBukkitApi checkPack
+          -PkunftigApiSrc=kunftig/api/src/main/java
+          -PlegacyBukkitApi=build/legacy-bukkit/bukkit-1.7.10.jar
+
+      - name: Resource pack zip
+        run: cd resourcepack && zip -qr ../build/Overkill-resourcepack.zip .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overkill-plugin
+          if-no-files-found: error
+          path: build/libs/Overkill-*.jar
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overkill-resourcepack
+          if-no-files-found: error
+          path: build/Overkill-resourcepack.zip
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-reports
+          path: build/reports/tests
