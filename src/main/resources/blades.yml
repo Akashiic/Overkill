@@ -1,0 +1,39 @@
+# Lâminas do servidor. A chave é livre; "id" é o modelo no resource pack (overkill:<id>) e o que fica gravado no item.
+#   item_base:       a espada do vanilla de que a lâmina é feita (WOOD_SWORD ... DIAMOND_SWORD). Segurar o botão
+#                    direito com uma espada levanta a guarda: é assim que se carrega a Slash Art.
+#   dano_base:       dano de um golpe com multiplicador 1.
+#   durabilidade:    golpes que acertam até a lâmina quebrar (quebrada, corta com 1/4 do dano e não usa Slash Art).
+#   combo:           conjunto de golpes (por enquanto: katana).
+#   slash_art:       corte_dimensional, onda ou corte_circular.
+#   refino_maximo:   refinos que ainda somam dano; dano_por_refino: quanto cada um soma.
+laminas:
+  basica:
+    id: katana/basica
+    nome: "&fKatana"
+    item_base: GOLD_SWORD
+    dano_base: 6
+    durabilidade: 600
+    combo: katana
+    slash_art: corte_dimensional
+    refino_maximo: 50
+    dano_por_refino: 0.1
+  rubra:
+    id: katana/rubra
+    nome: "&cLâmina Rubra"
+    item_base: GOLD_SWORD
+    dano_base: 7
+    durabilidade: 800
+    combo: katana
+    slash_art: onda
+    refino_maximo: 50
+    dano_por_refino: 0.1
+  tempestade:
+    id: katana/tempestade
+    nome: "&bTempestade"
+    item_base: GOLD_SWORD
+    dano_base: 6.5
+    durabilidade: 700
+    combo: katana
+    slash_art: corte_circular
+    refino_maximo: 50
+    dano_por_refino: 0.1

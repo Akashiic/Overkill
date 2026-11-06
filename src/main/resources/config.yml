@@ -1,0 +1,6 @@
+# Overkill
+# As lâminas ficam em blades.yml. Os golpes, combos e slash arts são do plugin (cada golpe tem uma animação no
+# resource pack, gerado a partir das mesmas definições: veja docs/PACK.md).
+
+# Lâminas cortam jogadores?
+pvp: false

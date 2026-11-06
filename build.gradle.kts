@@ -40,7 +40,8 @@ dependencies {
         testImplementation("com.akashic.kunftig:kunftig-api:$v")
     }
 
-    testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT") { isTransitive = false }
+    // Tests run Bukkit classes (MemoryConfiguration, ChatColor): with their libraries (Guava, Commons Lang).
+    testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 }

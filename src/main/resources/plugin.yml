@@ -1,0 +1,14 @@
+name: Overkill
+version: ${version}
+main: com.akashic.overkill.bukkit.OverkillPlugin
+description: Lâminas estilo SlashBlade e combate estilo hack'n'slash no 1.7.10, sobre o mod Kunftig.
+authors: [Akashiic]
+commands:
+  overkill:
+    description: Lâminas do Overkill (dar, refinar, reparar, info, recarregar).
+    usage: /overkill
+    aliases: [ok]
+permissions:
+  overkill.admin:
+    description: Dar lâminas e recarregar a configuração.
+    default: op
