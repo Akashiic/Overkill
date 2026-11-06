@@ -98,10 +98,15 @@ Gate de compatibilidade com a API Bukkit 1.7.10 real do Crucible (o jar sai do s
 Outra origem da API: `-PkunftigApiSrc=<pasta api/src/main/java>` ou o `mavenLocal()` (`./gradlew :api:publishToMavenLocal`
 no Künftig, com `-PkunftigApiVersion=<versão>`).
 
+> **Atenção (2026-11-06):** depois do estudo do código do SlashBlade, a implementação atual (combo no clique
+> esquerdo, golpes e rank inventados, cubos GeckoLib) será substituída por um port fiel do SlashBlade: Resharped.
+> Estudo e plano: [`docs/fidelidade/`](docs/fidelidade/README.md).
+
 ## Documentos
 
 | Arquivo | Conteúdo |
 |---|---|
+| [`docs/fidelidade/`](docs/fidelidade/README.md) | **Estudo do código do SlashBlade (Resharped, SB2, DER) e plano de fidelidade** |
 | [`docs/COMBATE.md`](docs/COMBATE.md) | Referência das mecânicas: golpes e quadros, slash arts, teclas, rank, fórmulas |
 | [`docs/PACK.md`](docs/PACK.md) | Resource pack: o que é gerado, como trocar a arte, como validar |
 | [`docs/ESTUDO.md`](docs/ESTUDO.md) | Estudo de viabilidade original e o que virou cada lacuna |
