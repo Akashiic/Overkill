@@ -9,7 +9,7 @@ Este documento resume o estudo do código-fonte e decide a arquitetura. Os relat
 | Relatório | Assunto |
 |---|---|
 | [`01-combo.md`](estudo/01-combo.md) | Máquina de combo, ~90 estados (quadros, duração, janelas, prioridades, cada corte), entrada, acerto, dano, knockback, stun, movimento, "just" |
-| [`02-render-animation.md`](estudo/02-render-animation.md) | Modelos OBJ das lâminas, esqueleto `bladeholder` e `hardpointA/B`, VMD (30 fps, lerp/slerp), animação do jogador no modelo vanilla, primeira pessoa, estados de GL, receita de port para o 1.7.10 |
+| [`02-render-animation.md`](estudo/02-render-animation.md) | Modelos OBJ das lâminas, esqueleto `bladeholder` e `hardpointA/B`, VMD (30 fps, lerp/nlerp), animação do jogador no modelo vanilla, primeira pessoa, estados de GL, receita de port para o 1.7.10 |
 | [`03-vfx.md`](estudo/03-vfx.md) | Arco de corte (transformações, 4 passes por rank, alfa), Judgement Cut, Drive/Wave Edge, 6 tipos de espadas invocadas, 9 slash arts, todos os `doSlash` dos combos, cores |
 | [`04-lockon-rank-progression.md`](estudo/04-lockon-rank-progression.md) | Lock-on segurando Shift, câmera, marcador, rank de concentração (D…SSS), HUD, estado da lâmina (abates, proud soul, refino na bigorna, quebra), efeitos especiais, teclas, as 26 lâminas de fábrica |
 | [`05-der-and-diffs.md`](estudo/05-der-and-diffs.md) | O que o DER acrescenta (dupla empunhadura, 56 estados duplos, três lâminas, render da segunda lâmina) e as diferenças SB2 × Resharped |
@@ -79,7 +79,7 @@ Servidor (Overkill)                                   Cliente (Künftig + pack)
 
 1. **Leitor de OBJ do SlashBlade**: triângulos `v/vt/vn`, normais por vértice, V invertido, UV puxado 0,0005 para o
    centro da face, cor por vértice, partes por nome; operador de UV e "alfa 0 onde y = 0" para os efeitos.
-2. **VMD**: leitor e amostragem (lerp na posição, slerp no quaternion, sem curvas Bézier, como o NyMMD), hierarquia
+2. **VMD**: leitor e amostragem (lerp na posição, nlerp — lerp normalizado, que o NyMMD chama de "Slerp" — no quaternion, sem curvas Bézier), hierarquia
    do `bladeholder` (9 ossos na origem, sem IK).
 3. **Lâmina do jogador**: matriz do `hardpointA`/`hardpointB` com `translate(0,1.5,0)·scale(1/8)·rotZ(180)·espelho X`
    e o OBJ a 1/16; lâmina de reserva (mão secundária ou slot 0) por tipo de porte; primeira pessoa com a
@@ -131,6 +131,13 @@ Port direto do `ComboStateRegistry`, `ComboCommands`, `AttackManager`, `KnockBac
 | F4 | Overkill: slash arts, espadas invocadas (6 tipos), lock-on por Shift, rank exato, progressão (abates, proud soul, refino na bigorna, quebra, efeitos especiais), 26 lâminas | testes |
 | F5 | DER: dupla empunhadura com Backhand, 56 estados duplos, três lâminas | testes e capturas |
 | F6 | Validação num servidor Crucible com jogadores: sensação, ping, desempenho, mobs de mods | relatório |
+
+Andamento: **F1 feita** (Künftig: motor de lâminas, conferido contra as poses do SB e contra capturas do Resharped).
+**F2 feita no Künftig**: arco de corte (4 passadas por rank), Judgement Cut (esferas que escurecem com subtração
+reversa, cascas e ventos, com o bug do alfa do vento mantido), drive, espadas invocadas (voo tick a tick como o SB,
+cravadas no alvo, órbitas por mensagem), marcador do lock-on com o anel de vida por máscara de profundidade, câmera do
+lock-on segurando o Sneak e HUD do rank com o decaimento do SB (`KunftigEffects`, canal `kunftig:effect`; ver
+`docs/API.md` §18 do Künftig). A entrada no formato do SB (bits de teclas) entra com a F3.
 
 ## 6. Decisão pendente: a arte
 
