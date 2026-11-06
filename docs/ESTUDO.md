@@ -98,7 +98,7 @@ O maior custo não é código. Cada golpe do combo precisa de uma animação fei
 - Uma katana 3D na mão com `sacar`, `parada` e 3 golpes encadeados.
 - Manifesto `item_models_3d.json` com `itens` apontando para um item base do vanilla (**a decidir**: por exemplo, espada de ferro).
 - Entrada só por cliques e eventos do Bukkit; dano no servidor.
-- Objetivo: validar desenho, previsão e latência, e medir desempenho com poucos jogadores.
+- Objetivo: validar o desenho e medir a latência do modo 100% servidor, além do desempenho com poucos jogadores. A previsão local de golpe não existe no Künftig hoje e entra na fase 2, se a sensação exigir. Detalhes em [`FASE1-DESIGN.md`](FASE1-DESIGN.md).
 
 ### Fase 2: estado persistente e entrada
 - Lâminas definidas por JSON no plugin (id, kill count, proud soul, refine, slash art, special effects), guardadas via PDC.

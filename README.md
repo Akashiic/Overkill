@@ -9,6 +9,7 @@ Estudo e roadmap para levar o **SlashBlade** (mod de katanas) com **combate esti
 | Arquivo | Conteúdo |
 |---|---|
 | [`docs/ESTUDO.md`](docs/ESTUDO.md) | Viabilidade, mapeamento SlashBlade/DMC → Künftig, lacunas, riscos, licenças e roadmap em fases |
+| [`docs/FASE1-DESIGN.md`](docs/FASE1-DESIGN.md) | Design da fase 1: katana 3D, combo de 3 golpes, manifesto do pack, máquina de combo, critérios de aceite e rascunho do canal de entrada |
 | [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md) | Fontes consultadas (repositórios, páginas de mods, documentação do Künftig) |
 
 ## Resumo em cinco linhas
