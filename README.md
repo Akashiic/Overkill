@@ -1,88 +1,103 @@
 # Overkill
 
-Lâminas no estilo **SlashBlade** e combate **hack'n'slash** (combos, slash arts, espadas invocadas, rank de estilo)
-para o **Minecraft 1.7.10**, como **plugin Bukkit** (Thermos/Crucible) + **resource pack**, por cima do mod
-[Künftig](https://github.com/Akashiic/Kunftig) (API 9) e do **GeckoLib Unofficial 1.0.4** no cliente.
+O combate do **SlashBlade** (combos, slash arts, lock-on segurando Sneak, rank de concentração) no **Minecraft
+1.7.10**, como **plugin Bukkit** (Thermos/Crucible) + **resource pack**, desenhado pelo mod
+[Künftig](https://github.com/Akashiic/Kunftig) (API 9) no cliente. Katanas, efeitos e HUD com **arte própria**.
 
-O servidor decide tudo: dano, combos, slash arts, rank. O cliente com Künftig desenha a katana em 3D, prevê o golpe
-no instante do clique e mostra HUD, efeitos e trava de câmera. Quem entra sem o Künftig vê a espada vanilla e as
-partículas dos cortes, e o combate funciona igual.
+O servidor decide tudo: a máquina de combo (portada do SlashBlade: Resharped), os acertos, o dano, o knockback, o
+stun, as slash arts e o rank. O cliente com Künftig desenha a katana pelo motor de lâminas (OBJ + VMD), o corpo do
+jogador, os efeitos (arco do corte, Judgement Cut, ondas, espadas invocadas), a mira do lock-on e o HUD.
+
+![As cinco katanas](docs/capturas/katanas.jpg)
 
 ## O que tem
 
-| Mecânica | Como funciona |
+| Mecânica | Como funciona (igual ao SlashBlade) |
 |---|---|
-| **Lâminas** | Configuráveis em `blades.yml`. Cada item guarda abates, proud soul, refino e desgaste (dados persistentes do Künftig). Três lâminas de fábrica: Katana, Lâmina Rubra e Tempestade |
-| **Combo** | Clique esquerdo. Quatro golpes no chão; correndo, uma investida; agachado, um lançador; no ar, três golpes aéreos que mantêm o alvo no ar; agachado no ar, uma queda. Atacar enquanto saca é um **iaido** (saque rápido, dano dobrado) |
-| **Slash Art** | Segure o botão direito (a guarda da espada) até carregar e solte. **Corte Dimensional** (rajada de cortes onde você olha ou no alvo travado), **Onda Cortante** (projétil) ou **Corte Circular** (giro em volta). Custa proud soul |
-| **Espadas invocadas** | Tecla **Especial** (R). Três espadas teleguiadas até o alvo |
-| **Esquiva** | Tecla **Esquiva** (Alt esquerdo). Corrida curta na direção das teclas de movimento, com alguns ticks de invulnerabilidade. Esquivar no tempo certo dá estilo |
-| **Truque aéreo** | Tecla **Habilidade** (F). Teleporte para o lado do alvo travado |
-| **Trava de alvo** | Tecla **Travar alvo** (Z). A câmera segue o alvo e um marcador fica sobre ele |
-| **Rank de estilo** | D a SSS no HUD. Sobe com acertos variados, cai quando você apanha e escorre quando você para de lutar. Ranks altos rendem mais proud soul |
-| **Progressão** | Abates e proud soul por abate. `/overkill refinar` gasta proud soul e soma dano. Quando quebra, a lâmina corta com 1/4 do dano e não usa Slash Art; `/overkill reparar` conserta |
+| **Combo** | **Clique direito** (ou esquerdo em cima de um alvo). Combo A1 → A2 → A3 → A4 (A4ex e A5ex com Força ou Fome); esperar no fim de A2 leva ao C; clicar no fim de A3 abre o combo B (a rajada, até B7). Cada golpe só aceita o próximo clique depois da sua janela, sem fila |
+| **Comandos** | Sneak + frente + clique: **corte de investida** (segurando o botão e acertando: **estrela ascendente**). Sneak + trás + clique: **corte para cima** (segurando trás: **salto**). No ar: **combo aéreo** (A1-A3, ou B3-B4 esperando no fim do A2). No ar com Sneak + trás: **corte descendente** |
+| **Slash Art** | Segure o botão direito (9 ticks) e solte: a arte da katana. Soltar logo depois de carregar (ou no instante em que a lâmina embainha) é o **just**: a versão crítica |
+| **Lock-on** | **Segure Sneak**: trava no alvo que você olha (ou no mais perto), a câmera puxa para ele e a mira mostra a vida dele. Soltar destrava |
+| **Rank** | D a SSS: +30 pontos por acerto, -300 por dano levado, escorre até o piso do nível. Rank alto soma dano e muda o arco do corte. Contador de golpes estilo DmC ao lado |
+| **Acertos** | Cada corte acerta por 10 ticks em volta do jogador (alcance 4,5), cada alvo uma vez; ignora a invulnerabilidade do vanilla; knockback do golpe (cancelar, lançar, meteoro, empurrar); stun nos mobs |
 
-Referência completa (golpes, quadros, janelas, fórmulas): [`docs/COMBATE.md`](docs/COMBATE.md).
+As cinco katanas (`blades.yml`):
+
+| Katana | Slash Art | Cor dos efeitos |
+|---|---|---|
+| Katana de Aço (inicial) | — | azul |
+| Katana da Serpente | Onda Vertical (drive) | verde |
+| Katana Sakurajima | Corte Circular | laranja-magma |
+| Katana Raijin | Fio da Tempestade (wave edge: cinco ondas) | azul-elétrico |
+| Kusanagi no Tsurugi | Corte do Julgamento (Judgement Cut) | dourado |
+
+Referência das mecânicas: [`docs/COMBATE.md`](docs/COMBATE.md). Estudo do código do SlashBlade e plano:
+[`docs/fidelidade/`](docs/fidelidade/README.md).
 
 ## Capturas
 
-Tiradas num cliente 1.7.10 de verdade pelo harness de desenvolvimento do Künftig (modo `blades`), com a arte
-provisória gerada pelo plugin. O relatório das conferências está em [`docs/capturas/relatorio-harness.txt`](docs/capturas/relatorio-harness.txt).
+Tiradas num cliente 1.7.10 de verdade pelo harness de desenvolvimento do Künftig.
 
 | | |
 |---|---|
-| ![Katana em primeira pessoa](docs/capturas/katana-primeira-pessoa.png) | ![Golpe 3 em terceira pessoa](docs/capturas/golpe_3-terceira-pessoa.png) |
-| Katana 3D em primeira pessoa | `golpe_3` (corte de cima) em terceira pessoa |
-| ![Efeitos](docs/capturas/efeitos.png) | ![HUD e trava](docs/capturas/hud-e-trava.png) |
-| Corte Dimensional, Onda, Corte Circular e espada invocada | Rank no HUD, barra da Slash Art e trava de alvo com marcador |
+| ![Arco do corte e Judgement Cut](docs/capturas/efeitos-corte-e-julgamento.jpg) | ![Espadas invocadas, mira e HUD](docs/capturas/efeitos-espadas-mira-hud.jpg) |
+| Arco do corte (sem rank, B, SSS) e Judgement Cut | Espadas invocadas, mira do lock-on, HUD SSS com contador |
+| ![Sakurajima no jogo](docs/capturas/sakurajima-no-jogo.jpg) | ![Cabos](docs/capturas/cabos.png) |
+| Sakurajima no jogo, com o brilho do magma | Os cabos das cinco |
 
 ## Instalação
 
 | Onde | O quê |
 |---|---|
 | Servidor (Thermos/Crucible 1.7.10) | `mods/`: Künftig **9 ou mais novo** e UniMixins. `plugins/`: `Overkill-<versão>.jar` |
-| Cliente | `mods/`: Künftig 9+, UniMixins e GeckoLib Unofficial 1.0.4. Resource pack do Overkill (ou enviado pelo servidor) |
+| Cliente | `mods/`: Künftig 9+ e UniMixins. O resource pack do Overkill e, na alfa, o pack com os movimentos (VMD) |
 
-Os dois artefatos saem do CI (Actions) a cada build: **`overkill-plugin`** (o jar) e **`overkill-resourcepack`**
-(o zip do pack).
+Os artefatos saem do CI a cada build: **`overkill-plugin`** (o jar) e **`overkill-resourcepack`** (o zip).
 
 Comandos (`/overkill` ou `/ok`):
 
 | Comando | Quem | O quê |
 |---|---|---|
-| `/overkill dar <lâmina> [jogador]` | `overkill.admin` | entrega uma lâmina (`katana/basica`, `katana/rubra`, `katana/tempestade`...) |
-| `/overkill refinar` | todos | gasta proud soul da lâmina na mão e soma um refino |
-| `/overkill reparar` | todos | gasta proud soul e zera o desgaste |
-| `/overkill info` | todos | estatísticas da lâmina na mão, rank e se o cliente tem as teclas do Künftig |
+| `/overkill dar <lâmina> [jogador]` | `overkill.admin` | entrega uma katana (`katana/aco`, `katana/serpente`, `katana/sakurajima`, `katana/raijin`, `katana/kusanagi`) |
+| `/overkill info` | todos | o estado do combo da lâmina na mão |
 | `/overkill recarregar` | `overkill.admin` | relê `config.yml` e `blades.yml` |
 
-As teclas ficam em **Controles → Kunftig** e podem ser trocadas lá.
+As teclas do Künftig ficam em **Controles → Kunftig**.
 
 ## Arquitetura
 
 ```
  Overkill (plugin)  --compileOnly-->  kunftig-api (API 9)
-   core/   regras puras e testadas: golpes, combos, máquina de combo, geometria do corte, rank, carga, lâminas
-   bukkit/ eventos, dano, itens, slash arts, teclas, HUD, comandos
-   tools/  gerador do resource pack (a partir do mesmo core)
+   combo/          a máquina de combo do SlashBlade, pura e testada: estados, prioridades, janelas, linha do tempo,
+                   comandos de raiz, carga e slash arts, rank de concentração
+   bukkit/combat/  cliques, botão segurado, efeitos de corte e acertos, dano, knockback, stun, flutuação, lock-on,
+                   Judgement Cut, ondas, HUD
+   bukkit/         itens (dados persistentes), lâminas (blades.yml), comandos
+   tools/          a checagem do resource pack
+ arte/             os geradores da arte (Python): katanas e efeitos -> resource pack
         |
  Thermos/Crucible 1.7.10 + mods/kunftig (UniMixins)
-        |  kunftig:rod (estado da lâmina), kunftig:display (efeitos), kunftig:hud, kunftig:camera,
-        |  kunftig:input (teclas, cliente -> servidor)
- cliente 1.7.10: Künftig + GeckoLib + resource pack do Overkill
+        |  kunftig:blade (o que a lâmina toca), kunftig:effect (efeitos, mira, rank, contador),
+        |  kunftig:input (teclas seguradas, cliente -> servidor)
+ cliente 1.7.10: Künftig + resource pack do Overkill
 ```
 
-O resource pack é **gerado** a partir das mesmas definições de golpes que o servidor usa
-(`./gradlew generatePack`). As janelas de encadeamento do servidor e a previsão do cliente (`ao_atacar`) nunca
-divergem: o CI falha se o pack commitado não for o que o código gera. A arte gerada é provisória (programmer art),
-para ser trocada no Blockbench. Veja [`docs/PACK.md`](docs/PACK.md).
+## Arte
+
+Katanas, efeitos e HUD são **nossos**, gerados por código em [`arte/`](arte/): a geometria (lâmina shinogi-zukuri
+com kissaki, habaki, tsuba, tsuka com o relevo do ito, saya com sageo), as texturas em 2048x1024 (hamon com nie, hada,
+seda sobre pele de arraia, laca) e as camadas que brilham. Veja [`arte/katanas/README.md`](arte/katanas/README.md) e
+[`arte/efeitos/README.md`](arte/efeitos/README.md).
+
+Na **alfa**, os movimentos (os VMD da lâmina e do corpo) são os do SlashBlade, num pack separado que não está neste
+repositório. Na **beta** entram as animações próprias, no mesmo formato.
 
 ## Compilar
 
 Com o Künftig ao lado (`../Kunftig`), as fontes da `kunftig-api` são usadas direto:
 
 ```bash
-./gradlew build
+./gradlew build checkPack
 ```
 
 Gate de compatibilidade com a API Bukkit 1.7.10 real do Crucible (o jar sai do script do Künftig):
@@ -95,25 +110,21 @@ Gate de compatibilidade com a API Bukkit 1.7.10 real do Crucible (o jar sai do s
 ./gradlew checkLegacyBukkitApi -PlegacyBukkitApi=build/legacy-bukkit/bukkit-1.7.10.jar
 ```
 
-Outra origem da API: `-PkunftigApiSrc=<pasta api/src/main/java>` ou o `mavenLocal()` (`./gradlew :api:publishToMavenLocal`
-no Künftig, com `-PkunftigApiVersion=<versão>`).
-
-> **Atenção (2026-11-06):** depois do estudo do código do SlashBlade, a implementação atual (combo no clique
-> esquerdo, golpes e rank inventados, cubos GeckoLib) será substituída por um port fiel do SlashBlade: Resharped.
-> Estudo e plano: [`docs/fidelidade/`](docs/fidelidade/README.md).
-
 ## Documentos
 
 | Arquivo | Conteúdo |
 |---|---|
-| [`docs/fidelidade/`](docs/fidelidade/README.md) | **Estudo do código do SlashBlade (Resharped, SB2, DER) e plano de fidelidade** |
-| [`docs/COMBATE.md`](docs/COMBATE.md) | Referência das mecânicas: golpes e quadros, slash arts, teclas, rank, fórmulas |
-| [`docs/PACK.md`](docs/PACK.md) | Resource pack: o que é gerado, como trocar a arte, como validar |
-| [`docs/ESTUDO.md`](docs/ESTUDO.md) | Estudo de viabilidade original e o que virou cada lacuna |
-| [`docs/FASE1-DESIGN.md`](docs/FASE1-DESIGN.md) | Design da fase 1 (histórico; a implementação foi além) |
+| [`docs/COMBATE.md`](docs/COMBATE.md) | Referência das mecânicas: entradas, estados, slash arts, acertos, dano, rank |
+| [`docs/PACK.md`](docs/PACK.md) | O resource pack: o que tem, como gerar, como validar |
+| [`docs/fidelidade/`](docs/fidelidade/README.md) | Estudo do código do SlashBlade (Resharped, SB2, DER) e o plano em fases |
+| [`docs/ESTUDO.md`](docs/ESTUDO.md), [`docs/FASE1-DESIGN.md`](docs/FASE1-DESIGN.md) | Histórico da primeira versão (substituída) |
 | [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md) | Fontes consultadas |
 
-## Licença
+## Créditos e licença
 
-Ainda não escolhida (como o Künftig). Nenhum código nem asset do SlashBlade foi copiado: as mecânicas foram
-reimplementadas a partir da descrição pública, e nomes, modelos, animações e texturas são próprios.
+A máquina de combo e as regras de combate são um port do código do **SlashBlade: Resharped** (licença MIT,
+(c) 2024 M Mysterious Mountain Forging-shop Group), feito a partir da leitura do código; o motor de lâminas e de
+efeitos do Künftig também. A arte do SlashBlade (modelos, texturas, animações) é "todos os direitos reservados" e
+**não está neste repositório**: as katanas, os efeitos e o HUD daqui são próprios.
+
+A licença do Overkill ainda não foi escolhida (como a do Künftig).

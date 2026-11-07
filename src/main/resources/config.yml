@@ -1,6 +1,9 @@
 # Overkill
-# As lâminas ficam em blades.yml. Os golpes, combos e slash arts são do plugin (cada golpe tem uma animação no
-# resource pack, gerado a partir das mesmas definições: veja docs/PACK.md).
+# As lâminas ficam em blades.yml. Os combos, golpes e slash arts são os do SlashBlade (portados para o plugin); os
+# modelos, as animações e os efeitos vêm do resource pack (kunftig/blades.json).
 
 # Lâminas cortam jogadores?
 pvp: false
+
+# Sons próprios do pack (overkill:corte, overkill:bainha...). Desligado: sons do vanilla parecidos.
+sons_proprios: false

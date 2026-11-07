@@ -1,106 +1,101 @@
 # Combate: referência
 
-Todos os números estão em **ticks do servidor** (20 por segundo) e saem de
-[`core/Arsenal.java`](../src/main/java/com/akashic/overkill/core/Arsenal.java), a mesma fonte que o gerador do
-resource pack usa. Se mudar um número lá, rode `./gradlew generatePack` (o CI falha se esquecer).
+O combate do Overkill é o do **SlashBlade: Resharped** (MIT), portado estado por estado para o plugin
+(`src/main/java/com/akashic/overkill/combo`). Os números abaixo são os do SlashBlade; o estudo completo, com as
+linhas do código original, está em [`fidelidade/estudo/01-combo.md`](fidelidade/estudo/01-combo.md) e
+[`fidelidade/estudo/04-lockon-rank-progression.md`](fidelidade/estudo/04-lockon-rank-progression.md).
 
-## 1. Como um golpe acontece
+## Entradas
 
-```
-clique esquerdo
-  cliente (Künftig): EntityClientPlayerMP#swingItem -> o modelo começa o golpe previsto (ao_atacar) na hora
-                     -> o mesmo swingItem manda ao servidor o balanço do braço
-  servidor (Overkill): PlayerAnimationEvent -> ComboMachine.attack(tick, postura)
-                       -> KunftigRods.setState(jogador, golpe)  (o cliente que previu não recomeça a animação)
-                       -> nos ticks de acerto: corta o que está no arco, cada alvo uma vez por golpe
-```
-
-* **Postura** no instante do clique: no chão ou no ar, agachado, correndo.
-* Um golpe tem **preparo**, **acerto** (ticks em que corta) e **recuperação**. Um clique dentro da **janela**
-  encadeia o próximo golpe; fora dela, durante o golpe, é ignorado (sem spam); depois do golpe, recomeça pela entrada.
-* O golpe vanilla com a lâmina é cancelado: quem corta são os ticks de acerto, todos os alvos no arco.
-* O dano passa pelo `EntityDamageByEntityEvent` como dano do jogador, então plugins de proteção e mods veem o golpe.
-  O tempo de invulnerabilidade do alvo é zerado antes de cada corte (combos rápidos acertam todos os golpes).
-* Cada corte que acerta gasta 1 de durabilidade da lâmina (a da espada vanilla fica sempre cheia).
-
-## 2. Golpes da katana
-
-Dano = dano da lâmina × multiplicador. Janela em ticks desde o início do golpe (inclusive).
-
-| Golpe | Entrada / postura | Preparo / acerto / recuperação | Janela | Próximo | Dano | Alcance / arco | Efeito |
-|---|---|---|---|---|---|---|---|
-| `golpe_1` | parado no chão | 2 / 2 / 10 | 4 a 13 | `golpe_2` | 1,0 | 3,5 / 110° | |
-| `golpe_2` | | 2 / 2 / 10 | 4 a 13 | `golpe_3` | 1,1 | 3,5 / 120° | |
-| `golpe_3` | | 3 / 2 / 11 | 5 a 15 | `golpe_4` | 1,25 | 3,8 / 100° | |
-| `golpe_4` | | 4 / 3 / 14 | | | 1,8 | 4,0 / 160° | empurrão forte |
-| `estocada` | correndo | 3 / 4 / 10 | 7 a 16 | `golpe_3` | 1,4 | 4,5 / 50° | investida para a frente |
-| `lancamento` | agachado no chão | 3 / 2 / 12 | 5 a 16 | `aereo_1` (no ar) ou `golpe_2` | 1,0 | 3,5 / 100° | lança o alvo para cima |
-| `aereo_1` | no ar | 2 / 2 / 9 | 4 a 12 | `aereo_2` | 0,9 | 3,5 / 120° | mantém o alvo e você no ar |
-| `aereo_2` | | 2 / 2 / 9 | 4 a 12 | `aereo_3` | 1,0 | 3,5 / 120° | mantém o alvo e você no ar |
-| `aereo_3` | | 3 / 2 / 12 | | | 1,3 | 3,8 / 140° | crava o alvo no chão |
-| `queda` | agachado no ar | 2 / 6 / 10 | | | 1,6 | 3,0 / 360° | mergulho |
-| `iaido` | atacar enquanto saca (10 ticks) | 1 / 2 / 10 | 3 a 12 | `golpe_2` | 2,0 | 4,0 / 140° | saque rápido |
-
-A previsão do cliente segue a cadeia simples (chão ou ar, sem agachar nem correr). Quando o servidor escolhe outro
-golpe pela postura (por exemplo `aereo_1` em vez de `golpe_1` porque você estava no ar), o estado dele vence e o
-cliente corrige em um ou dois quadros.
-
-O tamanho dos alvos vem da altura dos olhos (o Bukkit 1.7.10 não informa o tamanho de uma entidade); funciona para
-mobs vanilla e de mods.
-
-## 3. Slash Arts
-
-Segure o **botão direito** com a lâmina (a guarda da espada) até a barra encher e solte. Uma lâmina quebrada não
-usa Slash Art. O alvo de uma arte à distância é o alvo travado; sem trava, o que você olha; sem nada, o ponto onde o
-olhar bate num bloco.
-
-| Arte | Carga | Custo (proud soul) | O que faz |
-|---|---|---|---|
-| `corte_dimensional` (Corte Dimensional) | 14 | 12 | 5 pulsos de cortes num raio de 3,2 blocos, até 14 blocos de distância, 0,8 × dano por pulso |
-| `onda` (Onda Cortante) | 12 | 8 | Projétil a 1,2 bloco/tick por 18 blocos, raio 1,6, 1,6 × dano em cada alvo do caminho |
-| `corte_circular` (Corte Circular) | 10 | 6 | Dois giros em volta, raio 5, 1,4 × dano |
-
-Os efeitos 3D são exibições do Künftig (`overkill:corte_dimensional`, `overkill:onda`, `overkill:corte_circular`). A
-onda usa `Display#setMotion`: uma mensagem para o voo inteiro. Todo mundo também vê as partículas.
-
-## 4. Teclas do Künftig
-
-Ficam ligadas enquanto o jogador segura uma lâmina (`KunftigInput.bind`). Sem o Künftig 9 no cliente, não há teclas;
-o combo e as Slash Arts funcionam do mesmo jeito.
-
-| Tecla (padrão) | Ação | Detalhes |
-|---|---|---|
-| Especial (R) | Espadas invocadas | 3 espadas, 1,3 bloco/tick, 0,45 × dano cada, recarga 14 ticks, custo 1 proud soul. Teleguiadas no alvo travado ou no que você olha; sem alvo, vão reto |
-| Habilidade (F) | Truque aéreo | Teleporte para o lado do alvo travado (até 20 blocos), virado para ele. Recarga 40 ticks, custo 2 |
-| Esquiva (Alt esquerdo) | Esquiva | 1 bloco/tick na direção das teclas de movimento (para trás sem nenhuma), 6 ticks invulnerável, recarga 16 ticks. Um ataque esquivado vale 30 pontos de estilo |
-| Travar alvo (Z) | Trava de alvo | O alvo mais perto do centro da visão (cone de 35°, 20 blocos, com linha de visão). A câmera do Künftig segue; aperte de novo para soltar |
-
-## 5. Rank de estilo
-
-| Rank | Pontos | Título |
-|---|---|---|
-| D | 1 | Desleixado |
-| C | 100 | Cortante |
-| B | 250 | Brutal |
-| A | 450 | Avassalador |
-| S | 700 | Selvagem |
-| SS | 1000 | Supremo |
-| SSS | 1400 (máximo 1800) | Soberano |
-
-* Cada alvo acertado vale os pontos do golpe, **divididos por 2 a cada uso recente do mesmo golpe** (os últimos 6).
-  Variar rende mais.
-* Apanhar tira 80 + 20 × dano pontos. Sem ganhar nada por 50 ticks, o rank escorre (mais rápido quanto mais alto).
-* No HUD do Künftig: a letra, o título, a barra até o próximo rank e o número de golpes seguidos.
-
-## 6. Lâminas e progressão
-
-| Fórmula | Valor |
+| Entrada | De onde vem no 1.7.10 |
 |---|---|
-| Dano da lâmina | `dano_base + min(refino, refino_maximo) × dano_por_refino + min(abates, 1000) / 200` |
-| Lâmina quebrada | 1/4 do `dano_base`, sem Slash Art |
-| Proud soul por abate | `max(1, vida máxima da vítima / 4 × (1 + 0,25 × rank))`; sem rank, rank 0 |
-| Refino | custa `10 + 5 × refino` proud soul |
-| Reparo | custa 1 proud soul por 10 de desgaste |
+| Clique direito (`R_CLICK`) | o pacote de usar item (`PlayerInteractEvent`) com a katana na mão |
+| Clique esquerdo num alvo (`L_CLICK`) | o ataque do vanilla, que é cancelado: o golpe vem só do combo |
+| Botão direito segurado (`R_DOWN`) | a espada "defendendo" (`isBlocking`): é o que carrega a slash art |
+| Sneak | o servidor sabe (e é o lock-on) |
+| Frente, trás, lados, pulo, botão do meio, tecla especial | as teclas seguradas que o cliente Künftig manda (`KunftigInput.KEYS`) |
+| Chão / ar | o servidor (`isOnGround`) |
 
-Os dados ficam no item (`PublicBukkitValues`, formato do Bukkit 1.14+): `overkill:blade`, `overkill:kills`,
-`overkill:proud_soul`, `overkill:refine`, `overkill:wear`, e o modelo em `kunftig:model`.
+Cliques no meio da janela de um golpe são **descartados**, sem fila (como no SlashBlade).
+
+## Tempo
+
+* Movimentos a 30 quadros por segundo. Um estado dura `(int)(quadros x 1000/30 / velocidade) + espera` ms e termina
+  no primeiro tick em que `ticks x 50` passa disso; aí vai para o estado seguinte (um por tick).
+* A janela de um golpe é `(int)(quadros x 2/3)` ticks: antes disso o clique é ignorado.
+* As ações da linha do tempo de um estado contam a partir do primeiro tick dele (chave 0).
+
+## Estados principais
+
+| Estado | Quadros | Dura (ms / tick em que acaba) | Janela | Clique leva a | Golpes |
+|---|---|---|---|---|---|
+| `combo_a1` | 1-10 | 300 / 7 | 3 | A2 | corte -10 (0,44) no clique |
+| `combo_a2` | 100-115 | 500 / 11 | 3 | A3 | corte 170 (0,44) no clique |
+| `combo_a2_end` | 115-132 | 566 / 12 | — | **C** | |
+| `combo_c` | 400-459 | 1966 / 40 | 10 | — | cortes -30 e -35 (0,88) |
+| `combo_a3` | 200-218 | 600 / 13 | 6 | A4 (A4ex com Força/Fome) | cortes -61 e 138 (0,44) |
+| `combo_a3_end` | 218-230 | 400 / 9 | — | **B1** | |
+| `combo_a4` | 500-576 | 2533 / 51 | 14 | — | cortes 45 e 50 (0,44) |
+| `combo_a4_ex` | 800-839 | 1300 / 27 | 14 | A5ex | cortes 70 e 255 (1,0) |
+| `combo_a5ex` | 900-1013 | 3766 / 76 | 22 | — | três cortes críticos (1,0) |
+| `combo_b1` | 700-720 | 666 / 14 | 8 | B2 | 2 cortes + 8 da rajada (0,244) |
+| `combo_b2`..`b6` | 710-720 | 333 / 7 | 4 | o próximo | 7 cortes da rajada cada |
+| `combo_b7` | 710-764 | 1800 / 37 | 22 | — | 8 da rajada + 2 finais |
+| `aerial_rave_a1`..`a3` | 1100.. | 733 / 15 .. | 3, 3, 6 | o próximo | 0,28; o A3 empurra (smash) |
+| `aerial_rave_b3` / `b4` | 1400 / 1500 | 1233 / 25 | 6 | B4 | lança (toss) / derruba (meteor) |
+| `upperslash` | 1600-1659 | 1966 / 40 | 7 | — | corte -80 que lança (0,5), stun 15 |
+| `aerial_cleave` | 1800.. | — | — | — | cai 3 blocos/tick acertando; corte ao pousar (meteor) |
+| `rapid_slash` | 2000-2019 | 633 / 13 | — | (com Força: de novo) | investida 0,8/tick, 5 cortes |
+| `rising_star` | 2100-2137 | 1233 / 25 | 12 | — | sobe 0,6, dois cortes que lançam (0,6) |
+
+Comandos de raiz (do repouso, ou quando vencem a continuação pela prioridade, menor vence):
+
+| Teclas | Estado | Prioridade |
+|---|---|---|
+| chão + Sneak + frente + clique direito | `rapid_slash` | 70 |
+| chão + Sneak + trás + clique direito | `upperslash` | 90 |
+| chão + clique | `combo_a1` | 100 |
+| ar + Sneak + trás + clique direito | `aerial_cleave` | 70 |
+| ar + clique | `aerial_rave_a1` | 80 |
+
+Estados aéreos viram o seu estado final ao pousar. No ar, os golpes dão uma flutuação que enfraquece a cada tick até
+pousar.
+
+## Slash arts
+
+Segurar o botão direito: menos de 9 ticks não faz nada; de 9 a 11 é o **just** (a versão crítica); mais é o
+**sucesso**. Soltar em até 3 ticks depois de um estado de embainhar começar também é just (a "carga rápida"). Uma
+arte só começa se for mais forte que o estado atual, e nunca dentro da janela de um golpe.
+
+| Arte | Katana | O que faz |
+|---|---|---|
+| Corte do Julgamento (`judgement_cut`) | Kusanagi | recua, e um Judgement Cut no alvo travado (ou onde você olha): 10 ticks, acerta a cada 2 em volta (0,16); o just é crítico, lança e soma três cortes |
+| Onda Vertical (`drive_vertical`) | Serpente | um corte e uma onda que voa (velocidade 2, 10 ticks, 1,5 x ataque) |
+| Corte Circular (`circle_slash`) | Sakurajima | quatro cortes críticos em volta (0,325) |
+| Fio da Tempestade (`wave_edge`) | Raijin | um corte e cinco ondas verticais em velocidades de 0,2 a 1,0 |
+| Onda Horizontal, Corte do Vazio, Fim da Sakura | (configuráveis) | `drive_horizontal`, `void_slash`, `sakura_end` |
+
+## Acertos e dano
+
+* Um **corte** vive 10 ticks e, nos ticks 2, 4, 6, 8 e 10, acerta tudo em volta do jogador (como ele está naquele
+  tick): esfera de alcance **4,5** (quebrada 3,25) a partir dos pés, cortada por uma caixa empurrada meio alcance
+  para a frente. Cada alvo uma vez por corte. A invulnerabilidade do vanilla é ignorada.
+* **Alvos**: mobs hostis e qualquer um que bateu em você ou mira em você; nunca aldeões, os seus bichos, ou uma
+  montaria com jogador; jogadores só com `pvp: true`.
+* **Dano** = `(ataque da lâmina + bônus do rank + Afiação/Julgamento/Ruína) x multiplicador do golpe`, x1,1 no corte
+  crítico, x1,5 no crítico de pulo do vanilla. Bônus do rank: rank/2 (D 0,5 ... SSS 3,5).
+* **Knockback**: `cancelar` (fica no lugar), `lançar` (sobe 0,75), `meteoro` (desce 5,5), `empurrar` (x1,5).
+* **Stun** nos mobs: 10 ticks (15 no corte para cima e no corte descendente, 36 e 40 em artes): parados, caindo
+  devagar; depois de um meteoro, batem no chão.
+
+## Rank de concentração
+
+300 pontos por nível, até 1799: D 300, C 600, B 900, A 1200, S 1500, SS 1575, SSS 1650. +30 por acerto, -300 por dano
+levado; escorre 1 ponto por tick até o piso do nível em que está. O HUD aparece por 6 segundos a cada mudança. O
+contador de golpes ("27 HITS") conta acertos com menos de 3 segundos entre eles.
+
+## Lock-on
+
+Apertar Sneak com a katana: trava no alvo que você olha (até 40 blocos) ou no mais perto (12 de lado, 6 de altura).
+Enquanto segura, o cliente puxa a câmera e mostra a mira com a vida do alvo. Soltar destrava. O Judgement Cut cai no
+alvo travado.

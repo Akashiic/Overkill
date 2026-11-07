@@ -3,7 +3,7 @@ package com.akashic.overkill.core;
 import java.util.regex.Pattern;
 
 /**
- * A kind of blade, as configured: what it hits for, how long it lasts, its combo and its slash art. The instance in a
+ * A kind of blade, as configured: what it hits for, how long it lasts, its slash art and the colour of its effects. The instance in a
  * player's hand carries its own {@link BladeStats}. Immutable.
  */
 public final class Blade {
@@ -15,13 +15,17 @@ public final class Blade {
     public final String name;
     public final double baseDamage;
     public final int durability;
-    public final String combo;
+    /** The slash art's id ({@code judgement_cut} ...) or {@link #NO_ART}. */
     public final String slashArt;
+    /** The effects' colour (slash arcs, drives, the lock-on), RGB. */
+    public final int color;
     /** Refines that still add damage, and how much each adds. */
     public final int refineCap;
     public final double refineStep;
 
-    public Blade(String id, String name, double baseDamage, int durability, String combo, String slashArt,
+    public static final String NO_ART = "nenhuma";
+
+    public Blade(String id, String name, double baseDamage, int durability, String slashArt, int color,
         int refineCap, double refineStep) {
         if (id == null || !ID.matcher(id)
             .matches()) {
@@ -34,8 +38,8 @@ public final class Blade {
         this.name = name;
         this.baseDamage = baseDamage;
         this.durability = durability;
-        this.combo = combo;
-        this.slashArt = slashArt;
+        this.slashArt = slashArt == null ? NO_ART : slashArt;
+        this.color = color & 0xFFFFFF;
         this.refineCap = refineCap;
         this.refineStep = refineStep;
     }

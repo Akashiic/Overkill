@@ -92,8 +92,8 @@ val checkLegacyBukkitApi by tasks.registering(JavaCompile::class) {
 }
 
 /*
- * The resource pack, generated from the plugin's own moves and blades (src/tools, docs/PACK.md): manifests always,
- * placeholder art only where none exists. checkPack fails when the committed manifests are not what the code makes.
+ * The resource pack's check (src/tools): kunftig/blades.json and the files it names (the katanas and effects of
+ * arte/, generated there), the item icons, and the groups each model needs.
  */
 val tools: SourceSet = sourceSets.create("tools") {
     compileClasspath += sourceSets.main.get().output
@@ -104,16 +104,8 @@ sourceSets.test {
     runtimeClasspath += tools.output
 }
 
-val generatePack by tasks.registering(JavaExec::class) {
-    description = "Generates the resource pack into resourcepack/ (manifests; art only where missing)."
-    group = "build"
-    classpath = tools.runtimeClasspath
-    mainClass.set("com.akashic.overkill.pack.PackGenerator")
-    args(layout.projectDirectory.dir("resourcepack").asFile.absolutePath)
-}
-
 val checkPack by tasks.registering(JavaExec::class) {
-    description = "Fails when resourcepack/ manifests differ from what the moves and blades generate."
+    description = "Fails when resourcepack/ is missing a file blades.json names, or a model lacks its groups."
     group = "verification"
     classpath = tools.runtimeClasspath
     mainClass.set("com.akashic.overkill.pack.PackCheck")

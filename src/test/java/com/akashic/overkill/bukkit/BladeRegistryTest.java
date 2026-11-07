@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.junit.jupiter.api.Test;
 
-import com.akashic.overkill.core.Arsenal;
 import com.akashic.overkill.core.Blade;
 import com.akashic.overkill.core.BladeStats;
 
@@ -47,7 +46,8 @@ class BladeRegistryTest {
         c.set("laminas.boa.nome", "&fBoa");
         c.set("laminas.boa.item_base", "IRON_SWORD");
         c.set("laminas.boa.dano_base", 8.5);
-        c.set("laminas.boa.slash_art", "onda");
+        c.set("laminas.boa.slash_art", "drive_vertical");
+        c.set("laminas.boa.cor", "#FF0000");
         c.set("laminas.machado.item_base", "IRON_AXE");
         c.set("laminas.arte.slash_art", "voar");
         c.set("laminas.Feia.dano_base", 1);
@@ -55,7 +55,8 @@ class BladeRegistryTest {
         BladeRegistry r = BladeRegistry.read(c, logger(warnings));
         Blade b = r.get("katana/boa");
         assertEquals(8.5, b.baseDamage, 0);
-        assertEquals("onda", b.slashArt);
+        assertEquals("drive_vertical", b.slashArt);
+        assertEquals(0xFF0000, b.color);
         assertEquals(600, b.durability, "default");
         assertEquals(Material.IRON_SWORD, r.material(b));
         assertTrue(r.isBaseMaterial(Material.IRON_SWORD));
@@ -70,14 +71,14 @@ class BladeRegistryTest {
     void withoutTheSectionTheBuiltInBladesLoad() {
         List<String> warnings = new ArrayList<>();
         BladeRegistry r = BladeRegistry.read(new MemoryConfiguration(), logger(warnings));
-        assertEquals(Arsenal.DEFAULT_BLADES.size(), r.all()
+        assertEquals(BladeRegistry.DEFAULTS.size(), r.all()
             .size());
         assertEquals(1, warnings.size());
     }
 
     @Test
     void loreShowsTheStats() {
-        Blade b = Arsenal.DEFAULT_BLADES.get(0);
+        Blade b = BladeRegistry.DEFAULTS.get(4); // Kusanagi: Judgement Cut
         List<String> lore = BladeItems.lore(b, new BladeStats(12, 30, 2, 5));
         assertTrue(lore.get(0)
             .endsWith("12"));
@@ -86,9 +87,9 @@ class BladeRegistryTest {
         assertTrue(lore.get(2)
             .endsWith("+2"));
         assertTrue(lore.get(3)
-            .contains("595"));
+            .contains("1495"));
         assertTrue(lore.get(4)
-            .contains("Corte Dimensional"));
+            .contains("Corte do Julgamento"));
         List<String> broken = BladeItems.lore(b, new BladeStats(0, 0, 0, b.durability));
         assertTrue(broken.get(3)
             .contains("QUEBRADA"));

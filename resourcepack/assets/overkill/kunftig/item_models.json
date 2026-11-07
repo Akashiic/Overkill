@@ -1,5 +1,7 @@
 {
-  "katana/basica": "overkill:katana/basica",
-  "katana/rubra": "overkill:katana/rubra",
-  "katana/tempestade": "overkill:katana/tempestade"
+  "katana/aco": "overkill:katana/aco",
+  "katana/serpente": "overkill:katana/serpente",
+  "katana/sakurajima": "overkill:katana/sakurajima",
+  "katana/raijin": "overkill:katana/raijin",
+  "katana/kusanagi": "overkill:katana/kusanagi"
 }

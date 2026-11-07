@@ -18,7 +18,7 @@ import com.akashic.overkill.core.Blade;
 /** {@code /overkill}: give blades, refine, repair, inspect, reload. */
 final class OverkillCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUBS = Arrays.asList("dar", "refinar", "reparar", "info", "recarregar");
+    private static final List<String> SUBS = Arrays.asList("dar", "info", "recarregar");
     private final OverkillPlugin plugin;
 
     OverkillCommand(OverkillPlugin plugin) {
@@ -31,17 +31,16 @@ final class OverkillCommand implements CommandExecutor, TabCompleter {
         switch (sub) {
             case "dar":
                 return give(sender, args);
-            case "refinar":
-            case "reparar":
             case "info": {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage("Só jogadores.");
                     return true;
                 }
-                Player p = (Player) sender;
-                Combat c = plugin.combat();
+                String state = plugin.combat()
+                    .state((Player) sender);
                 sender.sendMessage(
-                    sub.equals("refinar") ? c.refine(p) : sub.equals("reparar") ? c.repair(p) : c.info(p));
+                    state == null ? ChatColor.GRAY + "Sem lâmina na mão."
+                        : ChatColor.GOLD + "Estado do combo: " + ChatColor.WHITE + state);
                 return true;
             }
             case "recarregar":
@@ -60,7 +59,7 @@ final class OverkillCommand implements CommandExecutor, TabCompleter {
                     ChatColor.GOLD + "/" + label
                         + " dar <lâmina> [jogador]"
                         + ChatColor.GRAY
-                        + " | refinar | reparar | info | recarregar");
+                        + " | info | recarregar");
                 sender.sendMessage(
                     ChatColor.GRAY + "Lâminas: " + String.join(
                         ", ",
@@ -92,7 +91,7 @@ final class OverkillCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.RED + "Jogador não encontrado.");
             return true;
         }
-        ItemStack item = plugin.combat()
+        ItemStack item = plugin.items()
             .create(b);
         if (!target.getInventory()
             .addItem(item)

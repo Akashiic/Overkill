@@ -5,22 +5,23 @@ import java.io.File;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.akashic.overkill.bukkit.combat.Combat;
+
 /**
- * Overkill: SlashBlade-style blades and DMC-style combat for Thermos/Crucible 1.7.10, on top of the Kunftig mod (held
- * 3D models with predicted attacks, displays, keys, HUD, lock-on). Everything is decided here, on the server.
+ * Overkill: SlashBlade's combat (Resharped's combo graph, slash effects, slash arts, lock-on and rank) on
+ * Thermos/Crucible 1.7.10, drawn by the Kunftig mod (the blade engine, the effects, the held keys). Everything is
+ * decided here, on the server.
  */
 public final class OverkillPlugin extends JavaPlugin {
 
-    private Kunftig kunftig;
     private BladeRegistry blades;
     private BladeItems items;
     private Combat combat;
-    private boolean pvp;
 
     @Override
     public void onEnable() {
-        kunftig = Kunftig.detect(this, getLogger());
-        if (kunftig == null) {
+        if (!kunftigPresent()) {
+            getLogger().severe("Overkill precisa do mod Kunftig (API 9: lâminas, efeitos e teclas) no servidor.");
             getServer().getPluginManager()
                 .disablePlugin(this);
             return;
@@ -29,22 +30,36 @@ public final class OverkillPlugin extends JavaPlugin {
         if (!new File(getDataFolder(), "blades.yml").isFile()) {
             saveResource("blades.yml", false);
         }
-        readConfig();
-        items = new BladeItems(this, blades);
-        combat = new Combat(this, items, kunftig);
-        getServer().getPluginManager()
-            .registerEvents(new CombatListener(combat, items), this);
-        getServer().getPluginManager()
-            .registerEvents(new InputListener(combat), this);
+        start();
         OverkillCommand command = new OverkillCommand(this);
         getCommand("overkill").setExecutor(command);
         getCommand("overkill").setTabCompleter(command);
-        getServer().getScheduler()
-            .runTaskTimer(this, combat::tick, 1, 1);
         getLogger().info(
             blades.all()
                 .size() + " lâmina(s): "
                 + blades.ids());
+    }
+
+    private static boolean kunftigPresent() {
+        try {
+            return com.akashic.kunftig.api.bukkit.blade.KunftigBlades.isAvailable()
+                && com.akashic.kunftig.api.bukkit.blade.KunftigEffects.isAvailable()
+                && com.akashic.kunftig.api.bukkit.input.KunftigInput.isAvailable();
+        } catch (LinkageError e) {
+            return false;
+        }
+    }
+
+    private void start() {
+        reloadConfig();
+        blades = BladeRegistry.read(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "blades.yml")), getLogger());
+        items = new BladeItems(this, blades);
+        combat = new Combat(
+            this,
+            items,
+            getConfig().getBoolean("pvp", false),
+            getConfig().getBoolean("sons_proprios", false));
+        combat.start();
     }
 
     @Override
@@ -54,35 +69,20 @@ public final class OverkillPlugin extends JavaPlugin {
         }
     }
 
-    private void readConfig() {
-        reloadConfig();
-        pvp = getConfig().getBoolean("pvp", false);
-        blades = BladeRegistry.read(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "blades.yml")), getLogger());
-    }
-
     /** /overkill recarregar: blades and settings again (the blades in players' hands keep their stats). */
     void reload() {
-        readConfig();
-        combat.shutdown();
-        items = new BladeItems(this, blades);
-        combat = new Combat(this, items, kunftig);
-        getServer().getScheduler()
-            .cancelTasks(this);
-        org.bukkit.event.HandlerList.unregisterAll(this);
-        getServer().getPluginManager()
-            .registerEvents(new CombatListener(combat, items), this);
-        getServer().getPluginManager()
-            .registerEvents(new InputListener(combat), this);
-        getServer().getScheduler()
-            .runTaskTimer(this, combat::tick, 1, 1);
-    }
-
-    boolean pvp() {
-        return pvp;
+        if (combat != null) {
+            combat.shutdown();
+        }
+        start();
     }
 
     BladeRegistry blades() {
         return blades;
+    }
+
+    BladeItems items() {
+        return items;
     }
 
     Combat combat() {

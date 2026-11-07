@@ -1,55 +1,43 @@
 # Resource pack
 
-O pack fica em [`resourcepack/`](../resourcepack) e é gerado por
-[`src/tools/.../PackGenerator.java`](../src/tools/java/com/akashic/overkill/pack/PackGenerator.java) a partir do
-[`Arsenal`](../src/main/java/com/akashic/overkill/core/Arsenal.java), o mesmo código que o servidor joga.
+O pack do Overkill fica em `resourcepack/` e sai como zip no CI (`overkill-resourcepack`). Tudo nele é gerado pelos
+scripts de [`arte/`](../arte/) e conferido pelo `./gradlew checkPack`.
 
-```bash
-./gradlew generatePack                        # manifestos sempre; arte só onde não existe
-./gradlew generatePack --args="--force-art"   # reescreve a arte também (apaga o trabalho de um artista!)
-./gradlew checkPack                           # o CI roda: manifestos iguais ao que o código gera, arquivos citados existem
+```
+resourcepack/assets/overkill/
+  kunftig/blades.json         as katanas, os efeitos e os movimentos, para o motor de lâminas do Künftig
+  kunftig/item_models.json    o ícone de cada katana no inventário
+  model/katana/<nome>.obj/png as cinco katanas (atlas 2048x1024 cada)
+  model/efeito/*.obj/png      corte, julgamento, onda, espada, mira
+  textures/gui/rank.png       o HUD do rank (512x512, no layout do SlashBlade)
+  textures/gui/contador.png   o contador de golpes
+  textures/items/katana/*.png os ícones (64x64)
+  movimento/                  os VMD: na alfa vêm de um pack à parte (não versionados)
 ```
 
-## O que é código e o que é arte
+## Gerar
 
-| Arquivo | Tipo | Quem mexe |
-|---|---|---|
-| `assets/overkill/kunftig/item_models_3d.json` | manifesto | **gerado**: estados de cada golpe e Slash Art, `ao_atacar` com as janelas do servidor |
-| `assets/overkill/kunftig/item_models.json` | manifesto | gerado: ícone 2D de cada lâmina |
-| `assets/overkill/kunftig/displays.json` | manifesto | gerado: efeitos (Corte Dimensional, Onda, Corte Circular, espada invocada) |
-| `pack.mcmeta` | manifesto | gerado |
-| `geo/`, `animations/`, `textures/` | arte | gerada uma vez como ponto de partida; depois é do artista |
+```bash
+python3 -m venv .venv && .venv/bin/pip install numpy pillow bpy
+.venv/bin/python arte/katanas/gerar.py     # katanas e blades.json
+.venv/bin/python arte/efeitos/gerar.py     # efeitos e HUD
+.venv/bin/python arte/katanas/icone.py     # ícones (Blender, sem tela)
+```
 
-Os manifestos têm que acompanhar os golpes: um golpe novo, uma janela diferente ou uma lâmina nova mudam o
-`ao_atacar` e os estados. Por isso o CI compara o pack commitado com o que o código gera.
+Prévias no Blender: `arte/katanas/previa.py` (veja [`arte/katanas/README.md`](../arte/katanas/README.md)).
 
-## Trocar a arte (Blockbench)
+## Conferir
 
-A arte gerada é provisória: uma katana de cubos e coreografias simples para cada golpe. Para substituir:
+```bash
+./gradlew checkPack
+```
 
-1. Abra `geo/blade/katana.geo.json` no Blockbench (modelo **Bedrock**, geometria 1.12.0). Mantenha o osso raiz
-   `katana` com a pega na origem e o osso `brilho` (é o que o manifesto lista em `luz` e `translucido`). Outros ossos
-   são livres.
-2. Animações: `animations/blade/katana.animation.json` (o item, osso `katana`) e `braco.animation.json` (o braço em
-   terceira pessoa, osso `braco_direito`). Formato 1.8.0. **Um nome por estado** (`animation.katana.<estado>` e
-   `animation.braco.<estado>`), com a **duração do golpe**: `(preparo + acerto + recuperação) / 20` segundos (tabela
-   em [`COMBATE.md`](COMBATE.md)). O corte deve cair entre o fim do preparo e o fim do acerto, que é quando o servidor
-   aplica o dano.
-3. O GeckoLib Unofficial 1.0.4 trata `catmullrom` como linear: exporte "amostrado" (vários keyframes).
-4. Texturas: `textures/blade/<lâmina>.png` (64×64 na katana gerada) e `textures/items/katana/<lâmina>.png` (ícone
-   16×16 do inventário).
-5. Depois de trocar, **não** rode `generatePack --force-art`. Rode `./gradlew checkPack`.
+Falha quando falta um arquivo que o `blades.json` cita, um modelo não tem os grupos que o motor desenha (`blade`,
+`blade_damaged`, `sheath`, `effect`, os ícones `item_*`; nos efeitos, `base`, `wind`, `ss`, os da mira), ou uma
+katana não tem ícone. A falta dos VMD só avisa: na alfa eles vêm do pack separado.
 
-Para ajustar a posição na mão, use no jogo `/kunftigclient rods display <contexto> <rx> <ry> <rz> <tx> <ty> <tz> <escala>`
-e copie o JSON impresso para o `display` em `PackGenerator.bladeModel`, depois `./gradlew generatePack`.
+## A alfa
 
-## Validação
-
-* `./gradlew checkPack` (Overkill): manifestos atualizados e todo arquivo citado presente.
-* No Künftig, com a pasta do pack: `./gradlew :test -ProdPack=<caminho>/resourcepack` roda o `RodPackCheckTest` e o
-  `DisplayPackCheckTest`, que leem o pack com o mesmo parser do cliente e conferem cada arquivo, osso e animação. O
-  pack gerado passa nos dois.
-* Visual: o harness de desenvolvimento do Künftig tem o modo `blades` (arquivo `run/client/kunftig-rod-harness` com
-  `blades`, o pack em `run/client/resourcepacks/Overkill` e selecionado em `options.txt`; `./gradlew runClient`).
-  Ele tira capturas da katana em cada estado, das exibições, do HUD e da trava de câmera, e escreve um relatório com
-  as conferências da previsão de golpe.
+Os movimentos da lâmina e do corpo (`movimento/motion.vmd` e `player_motion.vmd`) são, na alfa, os do SlashBlade:
+arte com todos os direitos reservados, por isso ficam fora deste repositório (a pasta está no `.gitignore`) e vão
+num pack separado, só para a alfa. Na beta entram as animações próprias, no mesmo formato.

@@ -12,10 +12,8 @@ import com.akashic.kunftig.api.bukkit.persistence.KunftigItems;
 import com.akashic.kunftig.api.bukkit.persistence.NamespacedKey;
 import com.akashic.kunftig.api.bukkit.persistence.PersistentDataContainer;
 import com.akashic.kunftig.api.bukkit.persistence.PersistentDataType;
-import com.akashic.overkill.core.Arsenal;
 import com.akashic.overkill.core.Blade;
 import com.akashic.overkill.core.BladeStats;
-import com.akashic.overkill.core.SlashArt;
 
 /**
  * Blades as items: which blade an item is and its {@link BladeStats}, kept in the item's persistent data (Kunftig's
@@ -105,6 +103,28 @@ public final class BladeItems {
         KunftigItems.setItemMeta(item, meta);
     }
 
+    /** The slash art's name in the lore, or null for none. */
+    static String artName(String id) {
+        switch (id) {
+            case "judgement_cut":
+                return "Corte do Julgamento";
+            case "drive_horizontal":
+                return "Onda Horizontal";
+            case "drive_vertical":
+                return "Onda Vertical";
+            case "wave_edge":
+                return "Fio da Tempestade";
+            case "circle_slash":
+                return "Corte Circular";
+            case "void_slash":
+                return "Corte do Vazio";
+            case "sakura_end":
+                return "Fim da Sakura";
+            default:
+                return null;
+        }
+    }
+
     static List<String> lore(Blade b, BladeStats s) {
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "Abates: " + ChatColor.WHITE + s.kills);
@@ -121,9 +141,9 @@ public final class BladeItems {
                     + "/"
                     + b.durability);
         }
-        SlashArt art = Arsenal.SLASH_ARTS.get(b.slashArt);
+        String art = artName(b.slashArt);
         if (art != null) {
-            lore.add(ChatColor.GRAY + "Slash Art: " + ChatColor.LIGHT_PURPLE + art.name);
+            lore.add(ChatColor.GRAY + "Slash Art: " + ChatColor.LIGHT_PURPLE + art);
         }
         lore.add(
             ChatColor.DARK_GRAY + "Dano: " + String.format(java.util.Locale.ROOT, "%.1f", b.attackDamage(s)));
