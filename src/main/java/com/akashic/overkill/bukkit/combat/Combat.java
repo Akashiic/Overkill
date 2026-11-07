@@ -101,6 +101,8 @@ public final class Combat implements Listener {
     private BukkitTask task;
     private long now;
     private boolean dealing;
+    private boolean warnedKeys;
+    private final java.util.Set<UUID> failed = new java.util.HashSet<>();
 
     /**
      * @param announceStar from which star a new katana is announced to the server (null: never)
@@ -157,7 +159,15 @@ public final class Combat implements Listener {
         now++;
         for (World w : Bukkit.getWorlds()) {
             for (Player p : w.getPlayers()) {
-                tick(p);
+                try {
+                    tick(p);
+                } catch (RuntimeException e) {
+                    // one player's trouble must not stop everyone's combat; logged once per player
+                    if (failed.add(p.getUniqueId())) {
+                        plugin.getLogger()
+                            .log(java.util.logging.Level.WARNING, "combate de " + p.getName() + " falhou", e);
+                    }
+                }
             }
         }
         tickStuns();
@@ -248,10 +258,21 @@ public final class Combat implements Listener {
     }
 
     /** The held keys, once the client listens (it may register the channel after the blade is already in hand). */
-    private static void bindKeys(Fighter f) {
+    private void bindKeys(Fighter f) {
         if (!f.keysBound && KunftigInput.sendsInput(f.player)) {
-            KunftigInput.bind(f.player, KunftigInput.KEYS, KunftigInput.SPECIAL);
             f.keysBound = true;
+            try {
+                KunftigInput.bind(f.player, KunftigInput.KEYS, KunftigInput.SPECIAL);
+            } catch (IllegalArgumentException e) {
+                // a Kunftig whose API refuses the held keys: the combo still works on clicks, Sneak and the ground
+                KunftigInput.bind(f.player, KunftigInput.SPECIAL);
+                if (!warnedKeys) {
+                    warnedKeys = true;
+                    plugin.getLogger()
+                        .warning("O Kunftig deste servidor não aceita as teclas seguradas (" + e.getMessage()
+                            + "): comandos com frente/trás ficam sem as teclas. Atualize o Kunftig.");
+                }
+            }
         }
     }
 
