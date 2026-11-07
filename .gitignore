@@ -6,3 +6,6 @@ build/
 /out/
 /bin/
 .DS_Store
+
+# VMD do SlashBlade (so no pack da alfa, nunca versionados)
+/resourcepack/assets/overkill/movimento/

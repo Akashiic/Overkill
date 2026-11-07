@@ -1,0 +1,48 @@
+{
+  "_formato": 1,
+  "_nota": "Katanas proprias do Overkill (arte/katanas). Os VMD em movimento/ vem do pack da alfa e nao sao versionados.",
+  "movimento_lamina": "overkill:movimento/motion.vmd",
+  "movimento_jogador": "overkill:movimento/player_motion.vmd",
+  "laminas": {
+    "katana/aco": {
+      "obj": "overkill:model/katana/aco.obj",
+      "textura": "overkill:model/katana/aco.png",
+      "porte": "DEFAULT",
+      "itens": [
+        "minecraft:golden_sword"
+      ]
+    },
+    "katana/serpente": {
+      "obj": "overkill:model/katana/serpente.obj",
+      "textura": "overkill:model/katana/serpente.png",
+      "porte": "DEFAULT",
+      "itens": [
+        "minecraft:golden_sword"
+      ]
+    },
+    "katana/sakurajima": {
+      "obj": "overkill:model/katana/sakurajima.obj",
+      "textura": "overkill:model/katana/sakurajima.png",
+      "porte": "DEFAULT",
+      "itens": [
+        "minecraft:golden_sword"
+      ]
+    },
+    "katana/raijin": {
+      "obj": "overkill:model/katana/raijin.obj",
+      "textura": "overkill:model/katana/raijin.png",
+      "porte": "DEFAULT",
+      "itens": [
+        "minecraft:golden_sword"
+      ]
+    },
+    "katana/kusanagi": {
+      "obj": "overkill:model/katana/kusanagi.obj",
+      "textura": "overkill:model/katana/kusanagi.png",
+      "porte": "DEFAULT",
+      "itens": [
+        "minecraft:golden_sword"
+      ]
+    }
+  }
+}
