@@ -12,17 +12,15 @@ SlashBlade (abates, proud soul, desgaste, a curva de dano do refino).
 
 | Origem | O que acontece |
 |---|---|
-| Bancada | A **Katana de Aço**: dois lingotes de ferro na diagonal sobre um graveto (`progressao.receita_inicial`) |
 | `/overkill dar <lâmina> [jogador] [estrela] [nível] [+N\|asc]` | Admin. Sem estrela, ela é sorteada como numa katana nova |
 
-As outras quatro (Serpente, Sakurajima, Raijin, Kusanagi) por enquanto só por admin: a forma de obtê-las no jogo
-(receitas que pedem uma katana com nível, abates e fortificação, como as lâminas nomeadas do SlashBlade) é o próximo
-passo.
+As katanas **não têm receita de bancada**. Por enquanto saem só por admin; a forma de obtê-las no jogo está em
+aberto.
 
 ### A estrela
 
-Sorteada **na primeira vez que a katana é empunhada** (assim uma pilha feita com Shift+clique na bancada sorteia uma
-estrela para cada uma). Quem empunha primeiro fica como "Forjada por". Cada estrela é cinco vezes mais rara que a de
+Sorteada **na primeira vez que a katana é empunhada** (uma katana dada sem estrela sorteia a sua quando alguém a
+segura). Quem empunha primeiro fica como "Forjada por". Cada estrela é cinco vezes mais rara que a de
 baixo:
 
 | Estrela | Peso | Chance | Dano |

@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.akashic.overkill.bukkit.combat.Combat;
-import com.akashic.overkill.core.Blade;
 import com.akashic.overkill.core.Drops;
 import com.akashic.overkill.core.Forge;
 import com.akashic.overkill.core.Leveling;
@@ -24,7 +23,6 @@ public final class OverkillPlugin extends JavaPlugin {
     private ForgeItems forgeItems;
     private ForgeGui forge;
     private Combat combat;
-    private boolean recipeAdded;
 
     @Override
     public void onEnable() {
@@ -81,11 +79,6 @@ public final class OverkillPlugin extends JavaPlugin {
             .registerEvents(forge, this);
         getServer().getPluginManager()
             .registerEvents(new Recipes(items, forgeItems), this);
-        Blade starter = blades.get(getConfig().getString("progressao.receita_inicial", "katana/aco"));
-        if (starter != null && !recipeAdded) {
-            Recipes.addStarter(items, starter);
-            recipeAdded = true;
-        }
     }
 
     private Leveling leveling() {

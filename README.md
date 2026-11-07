@@ -70,7 +70,7 @@ Comandos (`/overkill` ou `/ok`):
 | `/overkill info` | todos | o estado do combo da lâmina na mão |
 | `/overkill recarregar` | `overkill.admin` | relê `config.yml` e `blades.yml` |
 
-A Katana de Aço sai da bancada: dois lingotes de ferro na diagonal sobre um graveto.
+As katanas não têm receita de bancada: por enquanto saem por `/overkill dar`.
 
 As teclas do Künftig ficam em **Controles → Kunftig**.
 
@@ -83,7 +83,7 @@ As teclas do Künftig ficam em **Controles → Kunftig**.
    core/           lâminas e progressão, puras e testadas: nível, estrela, forja (+1..+17, Ascensão), drops
    bukkit/combat/  cliques, botão segurado, efeitos de corte e acertos, dano, knockback, stun, flutuação, lock-on,
                    Judgement Cut, ondas, HUD
-   bukkit/         itens (dados persistentes), lâminas (blades.yml), a forja (/forja), receita, comandos
+   bukkit/         itens (dados persistentes), lâminas (blades.yml), a forja (/forja), trava de receitas, comandos
    tools/          a checagem do resource pack
  arte/             os geradores da arte (Python): katanas e efeitos -> resource pack
         |

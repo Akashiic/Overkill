@@ -30,5 +30,3 @@ progressao:
   anunciar_estrela_a_partir_de: ouro
   # A partir de qual fortificação um sucesso na forja é anunciado (0 desliga; 18 é a Ascensão).
   anunciar_fortificacao_a_partir_de: 10
-  # A lâmina com receita na bancada (dois lingotes de ferro na diagonal sobre um graveto); "" desliga.
-  receita_inicial: katana/aco
