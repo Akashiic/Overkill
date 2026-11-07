@@ -86,6 +86,8 @@ public final class Combat implements Listener {
     static final int HITS_WINDOW = 60;
     /** Ticks between writes of a fight's changes to the item (a level up is written at once). */
     static final int FLUSH_TICKS = 20;
+    /** The longest a change waits for a pause in the fight. */
+    static final int FLUSH_MAX = 200;
 
     private final Plugin plugin;
     private final BladeItems items;
@@ -216,7 +218,10 @@ public final class Combat implements Listener {
         if (f.stats.star == null) {
             progression.rollStar(f, f.blade.name);
         }
-        if (f.dirty && !f.using && (f.levelUp || now - f.lastFlush >= FLUSH_TICKS)) {
+        // Writing the item makes the client show its name again over the hotbar: in a fight the changes wait for a
+        // pause (no hit for HITS_WINDOW ticks), a level up goes at once, and nothing waits longer than FLUSH_MAX.
+        boolean pause = now - f.lastHit > HITS_WINDOW && now - f.lastFlush >= FLUSH_TICKS;
+        if (f.dirty && !f.using && (f.levelUp || pause || now - f.lastFlush >= FLUSH_MAX)) {
             flush(f);
         }
         bindKeys(f);

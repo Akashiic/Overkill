@@ -166,8 +166,9 @@ reparada do vanilla).
 
 Dados persistentes (Künftig): `overkill:blade`, `xp`, `kills`, `proud_soul`, `fortificacao`, `estrela`, `wear`,
 `criador`. O nome ("Katana Sakurajima ★ +7 [Nv. 45]") e a descrição são reescritos a partir deles. Durante uma luta as
-mudanças ficam no servidor e vão para o item a cada segundo, nunca com o botão direito segurado: mexer no item na mão
-faria o cliente soltar a carga da Slash Art.
+mudanças ficam no servidor e vão para o item numa pausa (3 segundos sem acertar), ao subir de nível, ou no máximo a cada
+10 segundos, e nunca com o botão direito segurado: mexer no item na mão faria o cliente soltar a carga da Slash Art e
+mostrar o nome do item de novo sobre a hotbar.
 
 ## Admin
 
@@ -177,8 +178,7 @@ faria o cliente soltar a carga da Slash Art.
 | `/overkill pedra <comum..mitica\|tamahagane> [quantidade] [jogador]` | pedras de afiar ou tamahagane |
 | `/overkill ofuda <25\|50\|75\|100> [quantidade] [jogador]` | ofudas |
 
-## A verificar
+## Testado
 
-* Tudo isto compila contra a API Bukkit 1.7.10 do Crucible e o núcleo tem testes, mas ainda não rodou num servidor de
-  verdade: o clique nos cinco espaços do botão, o Shift+clique, a devolução ao fechar e a escrita do item durante a
-  luta precisam do teste no Crucible.
+No servidor (Crucible) com o cliente de testes: veja [TESTES.md](TESTES.md). A estrela, os abates, os drops, o
+desgaste, o reparo e a forja (Shift+clique, botão, sorteio, saída) funcionaram.

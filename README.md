@@ -128,6 +128,7 @@ Gate de compatibilidade com a API Bukkit 1.7.10 real do Crucible (o jar sai do s
 | [`docs/COMBATE.md`](docs/COMBATE.md) | Referência das mecânicas: entradas, estados, slash arts, acertos, dano, rank |
 | [`docs/PROGRESSAO.md`](docs/PROGRESSAO.md) | Níveis, estrela, almas, desgaste, a forja, pedras, ofudas, tamahagane |
 | [`docs/PACK.md`](docs/PACK.md) | O resource pack: o que tem, como gerar, como validar |
+| [`docs/TESTES.md`](docs/TESTES.md) | Testes no servidor do TEOF e num servidor enxuto com o cliente de testes |
 | [`docs/fidelidade/`](docs/fidelidade/README.md) | Estudo do código do SlashBlade (Resharped, SB2, DER) e o plano em fases |
 | [`docs/ESTUDO.md`](docs/ESTUDO.md), [`docs/FASE1-DESIGN.md`](docs/FASE1-DESIGN.md) | Histórico da primeira versão (substituída) |
 | [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md) | Fontes consultadas |
