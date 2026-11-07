@@ -55,6 +55,15 @@ def indice():
         "movimento_lamina": "overkill:movimento/motion.vmd",
         "movimento_jogador": "overkill:movimento/player_motion.vmd",
         "laminas": laminas,
+        "efeitos": {
+            "corte": {"obj": "overkill:model/efeito/corte.obj", "textura": "overkill:model/efeito/corte.png"},
+            "julgamento": {"obj": "overkill:model/efeito/julgamento.obj", "textura": "overkill:model/efeito/julgamento.png"},
+            "onda": {"obj": "overkill:model/efeito/onda.obj", "textura": "overkill:model/efeito/onda.png"},
+            "espada": {"obj": "overkill:model/efeito/espada.obj", "textura": "overkill:model/efeito/espada.png"},
+            "mira": {"obj": "overkill:model/efeito/mira.obj", "textura": "overkill:model/efeito/mira.png"},
+            "rank": {"textura": "overkill:textures/gui/rank.png"},
+            "contador": {"textura": "overkill:textures/gui/contador.png"},
+        },
     }
     os.makedirs(os.path.dirname(BLADES_JSON), exist_ok=True)
     with open(BLADES_JSON, "w", encoding="utf-8") as f:
