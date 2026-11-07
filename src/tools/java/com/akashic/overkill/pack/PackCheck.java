@@ -17,8 +17,8 @@ import javax.imageio.ImageIO;
 
 /**
  * Checks the resource pack before it ships: {@code kunftig/blades.json} parses; every katana and effect it names has
- * its OBJ and PNG, and each OBJ has the groups the Kunftig blade engine draws; every katana has its inventory icon in
- * {@code kunftig/item_models.json}. The motion files (VMD) come from the alpha's own pack and only warn.
+ * its OBJ and PNG, and each OBJ has the groups the Kunftig blade engine draws; every katana and every forge material
+ * has its inventory icon in {@code kunftig/item_models.json}, and every icon there exists. The motion files (VMD) come from the alpha's own pack and only warn.
  *
  * <pre>java PackCheck &lt;resourcepack dir&gt;</pre>
  */
@@ -151,6 +151,12 @@ public final class PackCheck {
         }
     }
 
+    /** The forge's materials (ForgeItems' models). */
+    static final List<String> FORGE_ICONS = java.util.Arrays.asList(
+        "forja/pedra_comum", "forja/pedra_incomum", "forja/pedra_rara", "forja/pedra_epica", "forja/pedra_lendaria",
+        "forja/pedra_mitica", "forja/ofuda_25", "forja/ofuda_50", "forja/ofuda_75", "forja/ofuda_100",
+        "forja/tamahagane");
+
     private void icons(Set<String> ids) throws IOException {
         File models = new File(root, "assets/overkill/kunftig/item_models.json");
         if (!models.isFile()) {
@@ -159,7 +165,12 @@ public final class PackCheck {
         }
         Object parsed = new Parser(new String(Files.readAllBytes(models.toPath()), StandardCharsets.UTF_8)).value();
         Map<?, ?> m = parsed instanceof Map ? (Map<?, ?>) parsed : new LinkedHashMap<>();
-        for (String id : ids) {
+        Set<String> wanted = new java.util.LinkedHashSet<>(ids);
+        wanted.addAll(FORGE_ICONS);
+        for (Object key : m.keySet()) {
+            wanted.add(String.valueOf(key));
+        }
+        for (String id : wanted) {
             Object icon = m.get(id);
             if (!(icon instanceof String)) {
                 errors.add("item_models.json: falta o ícone de " + id);

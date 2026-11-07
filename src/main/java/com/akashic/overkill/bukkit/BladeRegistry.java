@@ -68,9 +68,7 @@ public final class BladeRegistry {
                     s.getDouble("dano_base", 6),
                     s.getInt("durabilidade", 600),
                     art,
-                    color,
-                    s.getInt("refino_maximo", 50),
-                    s.getDouble("dano_por_refino", 0.1));
+                    color);
                 blades.put(b.id, b);
                 materials.put(b.id, m);
             } catch (IllegalArgumentException e) {
@@ -87,11 +85,11 @@ public final class BladeRegistry {
     /** The five katanas, when blades.yml has none. */
     public static final List<Blade> DEFAULTS = Collections.unmodifiableList(
         java.util.Arrays.asList(
-            new Blade("katana/aco", "&fKatana de Aço", 4, 600, Blade.NO_ART, 0x3333FF, 50, 0.1),
-            new Blade("katana/serpente", "&aKatana da Serpente", 5, 800, "drive_vertical", 0x33CC77, 50, 0.1),
-            new Blade("katana/sakurajima", "&6Katana Sakurajima", 6, 1000, "circle_slash", 0xFF6A2A, 50, 0.1),
-            new Blade("katana/raijin", "&9Katana Raijin", 6, 1000, "wave_edge", 0x55AAFF, 50, 0.1),
-            new Blade("katana/kusanagi", "&eKusanagi no Tsurugi", 7, 1500, "judgement_cut", 0xFFD966, 50, 0.1)));
+            new Blade("katana/aco", "&fKatana de Aço", 4, 600, Blade.NO_ART, 0x3333FF),
+            new Blade("katana/serpente", "&aKatana da Serpente", 5, 800, "drive_vertical", 0x33CC77),
+            new Blade("katana/sakurajima", "&6Katana Sakurajima", 6, 1000, "circle_slash", 0xFF6A2A),
+            new Blade("katana/raijin", "&9Katana Raijin", 6, 1000, "wave_edge", 0x55AAFF),
+            new Blade("katana/kusanagi", "&eKusanagi no Tsurugi", 7, 1500, "judgement_cut", 0xFFD966)));
 
     /** "#RRGGBB", "0xRRGGBB" or a number. */
     static int color(String s) {

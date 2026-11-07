@@ -20,6 +20,7 @@ jogador, os efeitos (arco do corte, Judgement Cut, ondas, espadas invocadas), a 
 | **Lock-on** | **Segure Sneak**: trava no alvo que você olha (ou no mais perto), a câmera puxa para ele e a mira mostra a vida dele. Soltar destrava |
 | **Rank** | D a SSS: +30 pontos por acerto, -300 por dano levado, escorre até o piso do nível. Rank alto soma dano e muda o arco do corte. Contador de golpes estilo DmC ao lado |
 | **Acertos** | Cada corte acerta por 10 ticks em volta do jogador (alcance 4,5), cada alvo uma vez; ignora a invulnerabilidade do vanilla; knockback do golpe (cancelar, lançar, meteoro, empurrar); stun nos mobs |
+| **Progressão** | Como as varas do AkashicFishing: **nível 1 a 99** abatendo (o dano cresce pela curva do refino do SlashBlade), **estrela** sorteada ao empunhar (normal, prata, ouro, irídio) e **fortificação** de +1 a +17 e a **Ascensão** na `/forja`, com pedras de afiar, ofudas de proteção e tamahagane que caem dos inimigos. Almas pagam as Slash Arts e o reparo |
 
 As cinco katanas (`blades.yml`):
 
@@ -31,7 +32,8 @@ As cinco katanas (`blades.yml`):
 | Katana Raijin | Fio da Tempestade (wave edge: cinco ondas) | azul-elétrico |
 | Kusanagi no Tsurugi | Corte do Julgamento (Judgement Cut) | dourado |
 
-Referência das mecânicas: [`docs/COMBATE.md`](docs/COMBATE.md). Estudo do código do SlashBlade e plano:
+Referência das mecânicas: [`docs/COMBATE.md`](docs/COMBATE.md); progressão e forja:
+[`docs/PROGRESSAO.md`](docs/PROGRESSAO.md). Estudo do código do SlashBlade e plano:
 [`docs/fidelidade/`](docs/fidelidade/README.md).
 
 ## Capturas
@@ -44,6 +46,10 @@ Tiradas num cliente 1.7.10 de verdade pelo harness de desenvolvimento do Künfti
 | Arco do corte (sem rank, B, SSS) e Judgement Cut | Espadas invocadas, mira do lock-on, HUD SSS com contador |
 | ![Sakurajima no jogo](docs/capturas/sakurajima-no-jogo.jpg) | ![Cabos](docs/capturas/cabos.png) |
 | Sakurajima no jogo, com o brilho do magma | Os cabos das cinco |
+
+![Materiais da forja](docs/capturas/forja-materiais.png)
+
+*Pedras de afiar (comum a mítica), tamahagane e ofudas de proteção.*
 
 ## Instalação
 
@@ -58,9 +64,13 @@ Comandos (`/overkill` ou `/ok`):
 
 | Comando | Quem | O quê |
 |---|---|---|
-| `/overkill dar <lâmina> [jogador]` | `overkill.admin` | entrega uma katana (`katana/aco`, `katana/serpente`, `katana/sakurajima`, `katana/raijin`, `katana/kusanagi`) |
+| `/forja` | `overkill.forja` (todos) | a forja: fortificar e reparar |
+| `/overkill dar <lâmina> [jogador] [estrela] [nível] [+N\|asc]` | `overkill.admin` | entrega uma katana (`katana/aco`, `katana/serpente`, `katana/sakurajima`, `katana/raijin`, `katana/kusanagi`) |
+| `/overkill pedra <tier\|tamahagane> [qtd] [jogador]`, `/overkill ofuda <25..100> [qtd] [jogador]` | `overkill.admin` | materiais da forja |
 | `/overkill info` | todos | o estado do combo da lâmina na mão |
 | `/overkill recarregar` | `overkill.admin` | relê `config.yml` e `blades.yml` |
+
+A Katana de Aço sai da bancada: dois lingotes de ferro na diagonal sobre um graveto.
 
 As teclas do Künftig ficam em **Controles → Kunftig**.
 
@@ -70,9 +80,10 @@ As teclas do Künftig ficam em **Controles → Kunftig**.
  Overkill (plugin)  --compileOnly-->  kunftig-api (API 9)
    combo/          a máquina de combo do SlashBlade, pura e testada: estados, prioridades, janelas, linha do tempo,
                    comandos de raiz, carga e slash arts, rank de concentração
+   core/           lâminas e progressão, puras e testadas: nível, estrela, forja (+1..+17, Ascensão), drops
    bukkit/combat/  cliques, botão segurado, efeitos de corte e acertos, dano, knockback, stun, flutuação, lock-on,
                    Judgement Cut, ondas, HUD
-   bukkit/         itens (dados persistentes), lâminas (blades.yml), comandos
+   bukkit/         itens (dados persistentes), lâminas (blades.yml), a forja (/forja), receita, comandos
    tools/          a checagem do resource pack
  arte/             os geradores da arte (Python): katanas e efeitos -> resource pack
         |
@@ -115,6 +126,7 @@ Gate de compatibilidade com a API Bukkit 1.7.10 real do Crucible (o jar sai do s
 | Arquivo | Conteúdo |
 |---|---|
 | [`docs/COMBATE.md`](docs/COMBATE.md) | Referência das mecânicas: entradas, estados, slash arts, acertos, dano, rank |
+| [`docs/PROGRESSAO.md`](docs/PROGRESSAO.md) | Níveis, estrela, almas, desgaste, a forja, pedras, ofudas, tamahagane |
 | [`docs/PACK.md`](docs/PACK.md) | O resource pack: o que tem, como gerar, como validar |
 | [`docs/fidelidade/`](docs/fidelidade/README.md) | Estudo do código do SlashBlade (Resharped, SB2, DER) e o plano em fases |
 | [`docs/ESTUDO.md`](docs/ESTUDO.md), [`docs/FASE1-DESIGN.md`](docs/FASE1-DESIGN.md) | Histórico da primeira versão (substituída) |

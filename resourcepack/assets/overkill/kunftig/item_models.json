@@ -3,5 +3,16 @@
   "katana/serpente": "overkill:katana/serpente",
   "katana/sakurajima": "overkill:katana/sakurajima",
   "katana/raijin": "overkill:katana/raijin",
-  "katana/kusanagi": "overkill:katana/kusanagi"
+  "katana/kusanagi": "overkill:katana/kusanagi",
+  "forja/pedra_comum": "overkill:forja/pedra_comum",
+  "forja/pedra_incomum": "overkill:forja/pedra_incomum",
+  "forja/pedra_rara": "overkill:forja/pedra_rara",
+  "forja/pedra_epica": "overkill:forja/pedra_epica",
+  "forja/pedra_lendaria": "overkill:forja/pedra_lendaria",
+  "forja/pedra_mitica": "overkill:forja/pedra_mitica",
+  "forja/ofuda_25": "overkill:forja/ofuda_25",
+  "forja/ofuda_50": "overkill:forja/ofuda_50",
+  "forja/ofuda_75": "overkill:forja/ofuda_75",
+  "forja/ofuda_100": "overkill:forja/ofuda_100",
+  "forja/tamahagane": "overkill:forja/tamahagane"
 }

@@ -50,6 +50,12 @@ final class Fighter implements Actor {
     boolean wasOnGround = true;
     float fallDecreaseRate;
 
+    /** The hotbar slot the blade is in, its stats changed since written to the item, when last written. */
+    int slot = -1;
+    boolean dirty;
+    boolean levelUp;
+    long lastFlush;
+
     LivingEntity lockTarget;
     int hits;
     long lastHit = -1000;

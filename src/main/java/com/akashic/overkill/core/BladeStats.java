@@ -1,48 +1,58 @@
 package com.akashic.overkill.core;
 
 /**
- * What one blade has lived through, stored in the item (persistent data): kills, proud soul (the blade's currency,
- * earned by killing, spent on slash arts, refining and repair), refines, and wear (durability used). Mutable value;
- * the plugin reads it from the item, changes it and writes it back.
+ * What one katana has lived through, stored in the item: its XP (the level), kills, proud soul (SlashBlade's currency,
+ * earned by killing, spent on slash arts and repairs), fortification (+0 .. +17, 18 the Ascension), star (null until
+ * rolled, the first time it is held) and wear. Mutable value; the plugin reads it from the item, changes it and writes
+ * it back.
  */
 public final class BladeStats {
 
+    /** SlashBlade's slash art cost; without it the blade takes one wear instead. */
+    public static final int ART_COST = 20;
+
+    public long xp;
     public int kills;
     public int proudSoul;
-    public int refine;
+    public int enhancement;
+    public Star star;
     public int wear;
+    public String maker;
 
     public BladeStats() {}
 
-    public BladeStats(int kills, int proudSoul, int refine, int wear) {
+    public BladeStats(long xp, int kills, int proudSoul, int enhancement, Star star, int wear, String maker) {
+        this.xp = Math.max(0, xp);
         this.kills = Math.max(0, kills);
         this.proudSoul = Math.max(0, proudSoul);
-        this.refine = Math.max(0, refine);
+        this.enhancement = Math.max(0, Math.min(Forge.ASCENSION, enhancement));
+        this.star = star;
         this.wear = Math.max(0, wear);
+        this.maker = maker;
+    }
+
+    public int level(Leveling leveling) {
+        return leveling.levelOf(xp);
+    }
+
+    /** The star's multiplier, 1 while not rolled. */
+    public double starMultiplier() {
+        return star == null ? 1 : star.multiplier();
     }
 
     /** A broken blade still cuts, weakly, and cannot use slash arts until repaired. */
     public boolean broken(Blade b) {
-        return wear >= b.durability;
+        return wear >= b.durability(this);
     }
 
-    /** Wears the blade by {@code amount} (not past its durability). */
-    public void wear(Blade b, int amount) {
-        wear = Math.min(b.durability, wear + Math.max(0, amount));
+    /** Wears the blade by {@code amount}; true when this broke it. */
+    public boolean wear(Blade b, int amount) {
+        boolean was = broken(b);
+        wear = Math.min(b.durability(this), wear + Math.max(0, amount));
+        return !was && broken(b);
     }
 
-    /** Proud soul for a kill: a quarter of the victim's max health, more at higher style ranks; at least 1. */
-    public static int proudSoulFor(double victimMaxHealth, int styleRank) {
-        double rankFactor = 1 + 0.25 * Math.max(0, styleRank);
-        return (int) Math.max(1, Math.round(victimMaxHealth / 4 * rankFactor));
-    }
-
-    /** Proud soul the next refine costs. */
-    public int refineCost() {
-        return 10 + refine * 5;
-    }
-
-    /** Proud soul a full repair costs (one per 10 wear, rounded up). */
+    /** Proud soul a full repair costs: one per 10 wear, rounded up. */
     public int repairCost() {
         return (wear + 9) / 10;
     }
@@ -57,6 +67,6 @@ public final class BladeStats {
     }
 
     public BladeStats copy() {
-        return new BladeStats(kills, proudSoul, refine, wear);
+        return new BladeStats(xp, kills, proudSoul, enhancement, star, wear, maker);
     }
 }

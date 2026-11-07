@@ -7,3 +7,28 @@ pvp: false
 
 # Sons próprios do pack (overkill:corte, overkill:bainha...). Desligado: sons do vanilla parecidos.
 sons_proprios: false
+
+# Progressão das katanas: níveis por abates, estrela sorteada ao obter e fortificação na /forja (a escada das varas do
+# AkashicFishing). Veja docs/PROGRESSAO.md.
+progressao:
+  # XP do nível L ao L+1: base + fator * L^expoente. Um abate dá metade da vida máxima do alvo, vezes
+  # 1 + 0,1 * nível do rank de concentração.
+  curva:
+    base: 20
+    fator: 1.37
+    expoente: 1.5
+  # Chance, por abate com uma katana, de cair um material da forja. O tier da pedra e do ofuda é o do alvo (pela vida
+  # máxima); o tamahagane só cai de alvos lendários (mais de 150 de vida) e míticos (mais de 300, e chefes).
+  drops:
+    pedra: 0.0025
+    ofuda: 0.004
+    tamahagane_lendario: 0.005
+    tamahagane_mitico: 0.03
+  # As pedras de fortificação, os selos e as pedras de ascensão do AkashicFishing também servem na forja.
+  aceitar_itens_do_akashicfishing: true
+  # A partir de qual estrela uma katana nova é anunciada no servidor (normal, prata, ouro, iridio; "nunca" desliga).
+  anunciar_estrela_a_partir_de: ouro
+  # A partir de qual fortificação um sucesso na forja é anunciado (0 desliga; 18 é a Ascensão).
+  anunciar_fortificacao_a_partir_de: 10
+  # A lâmina com receita na bancada (dois lingotes de ferro na diagonal sobre um graveto); "" desliga.
+  receita_inicial: katana/aco

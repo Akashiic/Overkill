@@ -5,10 +5,17 @@ description: Lâminas estilo SlashBlade e combate estilo hack'n'slash no 1.7.10,
 authors: [Akashiic]
 commands:
   overkill:
-    description: Lâminas do Overkill (dar, refinar, reparar, info, recarregar).
+    description: Lâminas do Overkill (dar, pedra, ofuda, forja, info, recarregar).
     usage: /overkill
     aliases: [ok]
+  forja:
+    description: Abre a forja, onde as katanas são fortificadas e reparadas.
+    usage: /forja
+    aliases: [fortificar]
 permissions:
   overkill.admin:
-    description: Dar lâminas e recarregar a configuração.
+    description: Dar lâminas e materiais da forja e recarregar a configuração.
     default: op
+  overkill.forja:
+    description: Usar a forja.
+    default: true

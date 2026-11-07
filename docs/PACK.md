@@ -11,7 +11,8 @@ resourcepack/assets/overkill/
   model/efeito/*.obj/png      corte, julgamento, onda, espada, mira
   textures/gui/rank.png       o HUD do rank (512x512, no layout do SlashBlade)
   textures/gui/contador.png   o contador de golpes
-  textures/items/katana/*.png os ícones (64x64)
+  textures/items/katana/*.png os ícones das katanas (64x64)
+  textures/items/forja/*.png  os ícones das pedras de afiar, dos ofudas e do tamahagane (64x64)
   movimento/                  os VMD: na alfa vêm de um pack à parte (não versionados)
 ```
 
@@ -21,7 +22,8 @@ resourcepack/assets/overkill/
 python3 -m venv .venv && .venv/bin/pip install numpy pillow bpy
 .venv/bin/python arte/katanas/gerar.py     # katanas e blades.json
 .venv/bin/python arte/efeitos/gerar.py     # efeitos e HUD
-.venv/bin/python arte/katanas/icone.py     # ícones (Blender, sem tela)
+.venv/bin/python arte/katanas/icone.py     # ícones das katanas (Blender, sem tela)
+.venv/bin/python arte/itens/forja.py       # ícones dos materiais da forja (Blender + Pillow)
 ```
 
 Prévias no Blender: `arte/katanas/previa.py` (veja [`arte/katanas/README.md`](../arte/katanas/README.md)).
@@ -34,7 +36,7 @@ Prévias no Blender: `arte/katanas/previa.py` (veja [`arte/katanas/README.md`](.
 
 Falha quando falta um arquivo que o `blades.json` cita, um modelo não tem os grupos que o motor desenha (`blade`,
 `blade_damaged`, `sheath`, `effect`, os ícones `item_*`; nos efeitos, `base`, `wind`, `ss`, os da mira), ou uma
-katana não tem ícone. A falta dos VMD só avisa: na alfa eles vêm do pack separado.
+katana ou material da forja não tem ícone (ou um ícone do `item_models.json` não existe). A falta dos VMD só avisa: na alfa eles vêm do pack separado.
 
 ## A alfa
 

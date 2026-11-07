@@ -36,7 +36,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,6 +56,7 @@ import com.akashic.kunftig.api.bukkit.blade.KunftigBlades;
 import com.akashic.kunftig.api.bukkit.blade.KunftigEffects;
 import com.akashic.kunftig.api.bukkit.input.KunftigInput;
 import com.akashic.overkill.bukkit.BladeItems;
+import com.akashic.overkill.bukkit.ForgeItems;
 import com.akashic.overkill.combo.Actor;
 import com.akashic.overkill.combo.ComboMachine;
 import com.akashic.overkill.combo.ComboState;
@@ -63,6 +66,8 @@ import com.akashic.overkill.combo.Input;
 import com.akashic.overkill.combo.Knockback;
 import com.akashic.overkill.combo.Offset;
 import com.akashic.overkill.combo.SlashArt;
+import com.akashic.overkill.core.Drops;
+import com.akashic.overkill.core.Star;
 
 /**
  * SlashBlade's combat on a Thermos/Crucible server, driven by the combo engine ({@link Combos}): the clicks (a right
@@ -79,9 +84,12 @@ public final class Combat implements Listener {
     public static final String NS = "overkill";
     /** Ticks the hit counter keeps counting after the last hit (the client hides it at the same time). */
     static final int HITS_WINDOW = 60;
+    /** Ticks between writes of a fight's changes to the item (a level up is written at once). */
+    static final int FLUSH_TICKS = 20;
 
     private final Plugin plugin;
     private final BladeItems items;
+    private final Progression progression;
     private final Combos combos = Combos.base();
     private final boolean pvp;
     private final boolean packSounds;
@@ -94,9 +102,15 @@ public final class Combat implements Listener {
     private long now;
     private boolean dealing;
 
-    public Combat(Plugin plugin, BladeItems items, boolean pvp, boolean packSounds) {
+    /**
+     * @param announceStar from which star a new katana is announced to the server (null: never)
+     */
+    public Combat(Plugin plugin, BladeItems items, ForgeItems forgeItems, Drops drops, Star announceStar, boolean pvp,
+        boolean packSounds) {
         this.plugin = plugin;
         this.items = items;
+        this.progression = new Progression(this, forgeItems,
+            new Progression.Settings(items.leveling(), drops, announceStar));
         this.pvp = pvp;
         this.packSounds = packSounds;
     }
@@ -128,6 +142,10 @@ public final class Combat implements Listener {
         return combos;
     }
 
+    long now() {
+        return now;
+    }
+
     /** Whether an attack of ours is being dealt (our own damage events must not count as clicks). */
     public boolean dealing() {
         return dealing;
@@ -157,8 +175,14 @@ public final class Combat implements Listener {
     }
 
     private void tick(Player p) {
-        BladeItems.Held held = items.read(p.getItemInHand());
+        int slot = p.getInventory()
+            .getHeldItemSlot();
         Fighter f = fighters.get(p.getUniqueId());
+        if (f != null && f.dirty && f.slot != slot) {
+            flush(f);
+        }
+        ItemStack hand = p.getItemInHand();
+        BladeItems.Held held = items.read(hand);
         if (held == null) {
             if (f != null) {
                 leave(f);
@@ -169,8 +193,22 @@ public final class Combat implements Listener {
         if (f == null) {
             f = join(p);
         }
-        f.blade = held.blade;
-        f.stats = held.stats;
+        // While the stats changed and are not written yet, ours are newer than the item's.
+        if (!(f.dirty && f.slot == slot && f.blade == held.blade)) {
+            f.blade = held.blade;
+            f.stats = held.stats;
+        }
+        f.slot = slot;
+        if (hand.getDurability() != 0) {
+            // A vanilla sword wears by mining; ours keep their wear in the data.
+            hand.setDurability((short) 0);
+        }
+        if (f.stats.star == null) {
+            progression.rollStar(f, f.blade.name);
+        }
+        if (f.dirty && !f.using && (f.levelUp || now - f.lastFlush >= FLUSH_TICKS)) {
+            flush(f);
+        }
         bindKeys(f);
         f.sampleMotion();
         boolean ground = f.onGround();
@@ -217,7 +255,32 @@ public final class Combat implements Listener {
         }
     }
 
+    /**
+     * Writes the fighter's stats to the blade in its slot (name and lore too). Never while the use button is held: a
+     * changed item in hand makes the client drop the use (the charge), so a fight's changes wait for the release.
+     */
+    private void flush(Fighter f) {
+        f.dirty = false;
+        f.levelUp = false;
+        f.lastFlush = now;
+        if (f.slot < 0 || f.stats == null) {
+            return;
+        }
+        ItemStack it = f.player.getInventory()
+            .getItem(f.slot);
+        BladeItems.Held h = items.read(it);
+        if (h == null || h.blade != f.blade) {
+            return;
+        }
+        items.write(it, f.blade, f.stats);
+        f.player.getInventory()
+            .setItem(f.slot, it);
+    }
+
     private void leave(Fighter f) {
+        if (f.dirty) {
+            flush(f);
+        }
         Player p = f.player;
         if (p.isOnline()) {
             KunftigInput.bind(p);
@@ -256,8 +319,12 @@ public final class Combat implements Listener {
         return bits;
     }
 
+    /** The blade's slash art; none while broken (SlashBlade). */
     private SlashArt art(Fighter f) {
-        return f.blade == null ? null : SlashArt.byId(f.blade.slashArt);
+        if (f.blade == null || f.stats == null || f.stats.broken(f.blade)) {
+            return null;
+        }
+        return SlashArt.byId(f.blade.slashArt);
     }
 
     // ---- clicks, hold, release --------------------------------------------------------------------------------------
@@ -272,8 +339,8 @@ public final class Combat implements Listener {
 
     private void release(Fighter f, int heldTicks) {
         SlashArt art = art(f);
-        if (art != null) {
-            f.machine.release(now, f, heldTicks, art, 0);
+        if (art != null && f.machine.release(now, f, heldTicks, art, 0) != null) {
+            progression.art(f);
         }
     }
 
@@ -425,13 +492,14 @@ public final class Combat implements Listener {
 
     /**
      * The attack before the move's ratio: the blade's attack damage (SlashBlade's {@code ATTACK_DAMAGE}), the rank
-     * bonus (rank / 2; from S, at least min(level, refine)) and the damage enchantments.
+     * bonus (rank / 2; from S, at least min(XP level, fortification): the fortification stands for SlashBlade's
+     * refines) and the damage enchantments.
      */
     double attack(Fighter f, LivingEntity t) {
-        double atk = f.blade.attackDamage(f.stats);
+        double atk = f.blade.attackDamage(f.stats, progression.leveling());
         double bonus = f.rank.damageBonus(now);
         if (f.rank.rank(now) >= 5) {
-            bonus = Math.max(bonus, Math.min(f.player.getLevel(), f.stats.refine));
+            bonus = Math.max(bonus, Math.min(f.player.getLevel(), f.stats.enhancement));
         }
         ItemStack hand = f.player.getItemInHand();
         double ench = 0;
@@ -482,6 +550,7 @@ public final class Combat implements Listener {
         }
         knockback(t, before, kb);
         stun(t, f.machine.state().stun);
+        progression.hit(f);
         f.rank.add(Concentration.HIT, now);
         KunftigEffects.rank(p, NS, (int) f.rank.points(now));
         f.hits = now - f.lastHit > HITS_WINDOW ? 1 : f.hits + 1;
@@ -837,7 +906,7 @@ public final class Combat implements Listener {
                         bestT = along;
                     }
                 }
-                if (hit != null && strike(f, hit, damage * f.blade.attackDamage(f.stats) + f.rank.damageBonus(now),
+                if (hit != null && strike(f, hit, damage * f.blade.attackDamage(f.stats, progression.leveling()) + f.rank.damageBonus(now),
                     Knockback.CANCEL, true, false, false)) {
                     sound(hit.getLocation(), Sfx.DRIVE_HIT, 1.0f, 1.2f / (random.nextFloat() * 0.2f + 0.9f));
                 }
@@ -992,7 +1061,45 @@ public final class Combat implements Listener {
         Fighter f = fighters.remove(e.getPlayer()
             .getUniqueId());
         if (f != null) {
+            if (f.dirty) {
+                flush(f);
+            }
             f.slashes.clear();
+        }
+    }
+
+    /** A kill with a blade in hand (SlashBlade's {@code KillCounter}): kills, XP, proud soul, forge materials. */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onDeath(EntityDeathEvent e) {
+        Player killer = e.getEntity()
+            .getKiller();
+        if (killer == null || e.getEntity() == killer) {
+            return;
+        }
+        Fighter f = fighters.get(killer.getUniqueId());
+        if (f == null || f.stats == null) {
+            return;
+        }
+        progression.kill(f, e.getEntity(), e.getDroppedExp(), e.getDrops());
+    }
+
+    /** Mining with a blade wears it (SlashBlade: one per block that is not instant). */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBreak(BlockBreakEvent e) {
+        Fighter f = fighters.get(e.getPlayer()
+            .getUniqueId());
+        if (f != null && f.stats != null && e.getBlock()
+            .getType()
+            .isSolid()) {
+            progression.hit(f);
+        }
+    }
+
+    /** Writes a player's pending blade changes to the item now (before the forge takes it, for one). */
+    public void flush(Player p) {
+        Fighter f = fighters.get(p.getUniqueId());
+        if (f != null && f.dirty) {
+            flush(f);
         }
     }
 

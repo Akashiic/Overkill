@@ -15,7 +15,12 @@ enum Sfx {
     JUDGEMENT("overkill:julgamento", "mob.endermen.portal"),
     JUDGEMENT_PULSE("overkill:julgamento_pulso", "mob.wither.hurt"),
     DRIVE_HIT("overkill:onda_acerto", "random.break"),
-    SHATTER("overkill:estilhaco", "random.glass");
+    SHATTER("overkill:estilhaco", "random.glass"),
+    BREAK("overkill:quebra", "random.break"),
+    LEVEL_UP("overkill:nivel", "random.levelup"),
+    FORGE_HIT("overkill:forja", "random.anvil_use"),
+    FORGE_FAIL("overkill:forja_falha", "random.anvil_land"),
+    FORGE_UP("overkill:forja_sucesso", "random.levelup");
 
     final String name;
     final String fallback;

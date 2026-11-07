@@ -75,6 +75,9 @@ arte só começa se for mais forte que o estado atual, e nunca dentro da janela 
 | Fio da Tempestade (`wave_edge`) | Raijin | um corte e cinco ondas verticais em velocidades de 0,2 a 1,0 |
 | Onda Horizontal, Corte do Vazio, Fim da Sakura | (configuráveis) | `drive_horizontal`, `void_slash`, `sakura_end` |
 
+Cada Slash Art custa **20 almas** da katana; sem elas, sai assim mesmo e a katana leva 1 de desgaste. Uma katana
+quebrada não tem Slash Art (veja [PROGRESSAO.md](PROGRESSAO.md)).
+
 ## Acertos e dano
 
 * Um **corte** vive 10 ticks e, nos ticks 2, 4, 6, 8 e 10, acerta tudo em volta do jogador (como ele está naquele
@@ -83,7 +86,10 @@ arte só começa se for mais forte que o estado atual, e nunca dentro da janela 
 * **Alvos**: mobs hostis e qualquer um que bateu em você ou mira em você; nunca aldeões, os seus bichos, ou uma
   montaria com jogador; jogadores só com `pvp: true`.
 * **Dano** = `(ataque da lâmina + bônus do rank + Afiação/Julgamento/Ruína) x multiplicador do golpe`, x1,1 no corte
-  crítico, x1,5 no crítico de pulo do vanilla. Bônus do rank: rank/2 (D 0,5 ... SSS 3,5).
+  crítico, x1,5 no crítico de pulo do vanilla. O ataque da lâmina cresce com o nível, a estrela e a fortificação
+  ([PROGRESSAO.md](PROGRESSAO.md)). Bônus do rank: rank/2 (D 0,5 ... SSS 3,5); do S para cima, pelo menos
+  min(nível de XP do jogador, fortificação), a fortificação no lugar dos refinos do SlashBlade.
+* Cada acerto gasta 1 de durabilidade da katana.
 * **Knockback**: `cancelar` (fica no lugar), `lançar` (sobe 0,75), `meteoro` (desce 5,5), `empurrar` (x1,5).
 * **Stun** nos mobs: 10 ticks (15 no corte para cima e no corte descendente, 36 e 40 em artes): parados, caindo
   devagar; depois de um meteoro, batem no chão.
