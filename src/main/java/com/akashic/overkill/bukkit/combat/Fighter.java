@@ -90,6 +90,10 @@ final class Fighter implements Actor {
         prevX = l.getX();
         prevY = l.getY();
         prevZ = l.getZ();
+        if (combat.debug && (!onGround() || my != 0)) {
+            combat.debug(String.format(java.util.Locale.ROOT, "motion t%d ground %s y %.3f my %.3f pushed@%d %.3f",
+                now, onGround(), l.getY(), my, pushedAt == Long.MIN_VALUE ? -1 : pushedAt, pushedVy));
+        }
         if (onGround()) {
             dy = 0;
         } else if (pushedAt == now - 1) {
@@ -225,6 +229,11 @@ final class Fighter implements Actor {
         float ratio = fallDecreaseRate;
         fallDecreaseRate = Math.min(1.0f, fallDecreaseRate + 0.05f);
         double g = 0.08 * 0.85;
+        if (combat.debug) {
+            combat.debug(String.format(java.util.Locale.ROOT, "hover t%d %s vy %.3f ratio %.2f -> %s", combat.now(),
+                machine.state().id, dy, ratio, dy < 0 ? String.format(java.util.Locale.ROOT, "%.3f", (dy + g) * ratio)
+                    : "-"));
+        }
         if (dy < 0) {
             setVelocityY((dy + g) * ratio);
         }

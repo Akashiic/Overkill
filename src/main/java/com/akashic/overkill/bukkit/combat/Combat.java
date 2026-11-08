@@ -95,6 +95,12 @@ public final class Combat implements Listener {
     private final Combos combos = Combos.base();
     private final boolean pvp;
     private final boolean packSounds;
+    /** config.yml depuracao: logs the motion and hover of each fighter. */
+    boolean debug;
+
+    public void setDebug(boolean on) {
+        debug = on;
+    }
     private final Map<UUID, Fighter> fighters = new HashMap<>();
     private final Map<UUID, Stun> stuns = new HashMap<>();
     private final Map<UUID, UUID> revenge = new HashMap<>();
@@ -148,6 +154,11 @@ public final class Combat implements Listener {
 
     long now() {
         return now;
+    }
+
+    void debug(String line) {
+        plugin.getLogger()
+            .info("[depuração] " + line);
     }
 
     /** Whether an attack of ours is being dealt (our own damage events must not count as clicks). */

@@ -72,6 +72,7 @@ public final class OverkillPlugin extends JavaPlugin {
             Star.parse(getConfig().getString("progressao.anunciar_estrela_a_partir_de", "ouro")),
             getConfig().getBoolean("pvp", false),
             getConfig().getBoolean("sons_proprios", false));
+        combat.setDebug(getConfig().getBoolean("depuracao", false));
         combat.start();
         forge = new ForgeGui(this, items, forgeItems, Forge.DEFAULT);
         forge.announceFrom(getConfig().getInt("progressao.anunciar_fortificacao_a_partir_de", 10));
