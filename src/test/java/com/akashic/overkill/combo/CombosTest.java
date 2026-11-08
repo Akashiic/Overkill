@@ -1,6 +1,7 @@
 package com.akashic.overkill.combo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -233,6 +234,51 @@ class CombosTest {
         // the rapid slash root command (70) overrides the continuation (100)
         f.held = Input.SNEAK | Input.FORWARD;
         assertEquals("rapid_slash", m.click(now + 15, f, f.inputs() | Input.R_CLICK));
+    }
+
+    @Test
+    void theClickBufferLandsAnEarlyClickAtTheEarliestTick() {
+        ComboMachine m = new ComboMachine(G, null);
+        m.bufferTicks(8);
+        Fake f = new Fake();
+        long now = 100;
+        assertEquals("combo_a1", m.click(now, f, f.inputs() | Input.R_CLICK));
+        assertNull(m.click(now + 1, f, f.inputs() | Input.R_CLICK), "inside A1's lock: kept, not dropped");
+        assertTrue(m.hasBufferedClick());
+        m.tick(now + 1, f);
+        m.tick(now + 2, f);
+        assertEquals("combo_a1", m.state().id, "still locked");
+        m.tick(now + 3, f);
+        assertEquals("combo_a2", m.state().id, "the lock ends at tick 3: the kept click goes through");
+        assertFalse(m.hasBufferedClick());
+        // a click older than the buffer is forgotten
+        assertNull(m.click(now + 4, f, f.inputs() | Input.R_CLICK));
+        ComboMachine late = new ComboMachine(G, null);
+        late.bufferTicks(1);
+        late.click(0, f, f.inputs() | Input.R_CLICK);
+        late.click(0, f, f.inputs() | Input.R_CLICK);
+        late.tick(1, f);
+        late.tick(2, f);
+        late.tick(3, f);
+        assertEquals("combo_a1", late.state().id, "kept 1 tick, the lock lasted 3: forgotten");
+        // the held keys are the click's: a buffered Sneak + forward click is the rapid slash
+        ComboMachine dir = new ComboMachine(G, null);
+        dir.bufferTicks(8);
+        dir.click(0, f, f.inputs() | Input.R_CLICK);
+        dir.click(1, f, Input.SNEAK | Input.FORWARD | Input.ON_GROUND | Input.R_CLICK);
+        dir.tick(1, f);
+        dir.tick(2, f);
+        dir.tick(3, f);
+        assertEquals("rapid_slash", dir.state().id);
+        // a landing forgets it
+        ComboMachine air = new ComboMachine(G, null);
+        air.bufferTicks(8);
+        f.ground = false;
+        air.click(0, f, f.inputs() | Input.R_CLICK);
+        air.click(1, f, f.inputs() | Input.R_CLICK);
+        f.ground = true;
+        air.land(2, f);
+        assertFalse(air.hasBufferedClick());
     }
 
     @Test

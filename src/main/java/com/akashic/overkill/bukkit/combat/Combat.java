@@ -101,6 +101,16 @@ public final class Combat implements Listener {
     public void setDebug(boolean on) {
         debug = on;
     }
+
+    /** config.yml buffer_de_clique: ticks a click inside a lock window is kept (0: dropped, as SlashBlade). */
+    int clickBuffer = 6;
+
+    public void setClickBuffer(int ticks) {
+        clickBuffer = Math.max(0, Math.min(20, ticks));
+        for (Fighter f : fighters.values()) {
+            f.machine.bufferTicks(clickBuffer);
+        }
+    }
     private final Map<UUID, Fighter> fighters = new HashMap<>();
     private final Map<UUID, Stun> stuns = new HashMap<>();
     private final Map<UUID, UUID> revenge = new HashMap<>();

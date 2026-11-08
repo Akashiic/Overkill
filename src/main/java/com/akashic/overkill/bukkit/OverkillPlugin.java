@@ -73,6 +73,7 @@ public final class OverkillPlugin extends JavaPlugin {
             getConfig().getBoolean("pvp", false),
             getConfig().getBoolean("sons_proprios", false));
         combat.setDebug(getConfig().getBoolean("depuracao", false));
+        combat.setClickBuffer(getConfig().getInt("buffer_de_clique", 6));
         combat.start();
         forge = new ForgeGui(this, items, forgeItems, Forge.DEFAULT);
         forge.announceFrom(getConfig().getInt("progressao.anunciar_fortificacao_a_partir_de", 10));

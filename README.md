@@ -14,7 +14,7 @@ jogador, os efeitos (arco do corte, Judgement Cut, ondas, espadas invocadas), a 
 
 | Mecânica | Como funciona (igual ao SlashBlade) |
 |---|---|
-| **Combo** | **Clique direito** (ou esquerdo em cima de um alvo). Combo A1 → A2 → A3 → A4 (A4ex e A5ex com Força ou Fome); esperar no fim de A2 leva ao C; clicar no fim de A3 abre o combo B (a rajada, até B7). Cada golpe só aceita o próximo clique depois da sua janela, sem fila |
+| **Combo** | **Clique direito** (ou esquerdo em cima de um alvo). Combo A1 → A2 → A3 → A4 (A4ex e A5ex com Força ou Fome); esperar no fim de A2 leva ao C; clicar no fim de A3 abre o combo B (a rajada, até B7). Cada golpe aceita o próximo clique depois da sua janela; um clique adiantado fica guardado e encaixa no menor tempo (memória de clique, como no DmC) |
 | **Comandos** | Sneak + frente + clique: **corte de investida** (segurando o botão e acertando: **estrela ascendente**). Sneak + trás + clique: **corte para cima** (segurando trás: **salto**). No ar: **combo aéreo** (A1-A3, ou B3-B4 esperando no fim do A2). No ar com Sneak + trás: **corte descendente** |
 | **Slash Art** | Segure o botão direito (9 ticks) e solte: a arte da katana. Soltar logo depois de carregar (ou no instante em que a lâmina embainha) é o **just**: a versão crítica |
 | **Lock-on** | **Segure Sneak**: trava no alvo que você olha (ou no mais perto), a câmera puxa para ele e a mira mostra a vida dele. Soltar destrava |

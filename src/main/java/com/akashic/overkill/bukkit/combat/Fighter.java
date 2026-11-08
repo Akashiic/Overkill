@@ -65,6 +65,7 @@ final class Fighter implements Actor {
         this.player = player;
         this.combat = combat;
         this.machine = new ComboMachine(combat.combos(), (s, cause, now) -> combat.entered(this, s, cause, now));
+        this.machine.bufferTicks(combat.clickBuffer);
         Location l = player.getLocation();
         prevX = l.getX();
         prevY = l.getY();

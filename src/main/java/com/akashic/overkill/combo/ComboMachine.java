@@ -4,9 +4,15 @@ import java.util.List;
 
 /**
  * One fighter's combo state, SlashBlade's {@code ISlashBladeState} engine (Resharped, MIT): the current state and the
- * tick it was entered, timeouts resolved one per tick, clicks resolved against the root command table by priority
- * (no input buffer), hold and release (charge, quick charge, slash arts), and landing. Pure: the world is the
- * {@link Actor}; the {@link Listener} hears every state change (to play the motion, for example).
+ * tick it was entered, timeouts resolved one per tick, clicks resolved against the root command table by priority,
+ * hold and release (charge, quick charge, slash arts), and landing. Pure: the world is the {@link Actor}; the
+ * {@link Listener} hears every state change (to play the motion, for example).
+ *
+ * <p>SlashBlade drops a click that comes inside a strike's lock window. With a click buffer ({@link #bufferTicks}),
+ * as in Devil May Cry, that click is kept instead and goes through on the first tick the strike takes it, as long as
+ * it is no older than the buffer: an early click still lands the next strike at its earliest moment, so the strings
+ * flow with lag and frame drops. The held keys are the ones of the click; ground or air, the current ones. A new
+ * click replaces a kept one; a slash art, a landing or a reset forgets it. 0 is SlashBlade's own behaviour.
  */
 public final class ComboMachine {
 
@@ -34,6 +40,9 @@ public final class ComboMachine {
     private long lastAction;
     private int stateTicks;
     private boolean ticking;
+    private int bufferTicks;
+    private int bufferedInputs;
+    private long bufferedAt = -1;
 
     public ComboMachine(Combos combos, Listener listener) {
         this.combos = combos;
@@ -43,6 +52,20 @@ public final class ComboMachine {
 
     public Combos combos() {
         return combos;
+    }
+
+    /** How long (ticks) a click that came inside a lock window is kept; 0 drops it, as SlashBlade does. */
+    public void bufferTicks(int ticks) {
+        bufferTicks = Math.max(0, ticks);
+    }
+
+    public int bufferTicks() {
+        return bufferTicks;
+    }
+
+    /** Whether a click is being kept for the next strike. */
+    public boolean hasBufferedClick() {
+        return bufferedAt >= 0;
     }
 
     public ComboState state() {
@@ -68,6 +91,9 @@ public final class ComboMachine {
         state = s;
         lastAction = now;
         stateTicks = 0;
+        if (cause == Cause.CHARGE || cause == Cause.LAND || cause == Cause.RESET) {
+            bufferedAt = -1;
+        }
         listener.entered(s, cause, now);
         ComboState.Ctx c = ctx(a, now, a.inputs());
         for (ComboState.Action act : s.click) {
@@ -94,6 +120,17 @@ public final class ComboMachine {
         ticking = true;
         try {
             resolve(now, a);
+            if (bufferedAt >= 0) {
+                if (now - bufferedAt > bufferTicks) {
+                    bufferedAt = -1;
+                } else {
+                    int ground = a.onGround() ? Input.ON_GROUND : Input.ON_AIR;
+                    int inputs = bufferedInputs & ~(Input.ON_GROUND | Input.ON_AIR) | ground;
+                    if (accept(now, a, inputs) != null) {
+                        bufferedAt = -1;
+                    }
+                }
+            }
             ComboState s = state;
             ComboState.Ctx c = ctx(a, now, a.inputs());
             List<ComboState.Action> keyed = s.timeline.get(stateTicks);
@@ -123,6 +160,18 @@ public final class ComboMachine {
      * with these held {@code inputs}. Returns the state entered, or null when the click was ignored.
      */
     public String click(long now, Actor a, int inputs) {
+        String entered = accept(now, a, inputs);
+        if (entered == null && bufferTicks > 0) {
+            bufferedInputs = inputs;
+            bufferedAt = now;
+        } else {
+            bufferedAt = -1;
+        }
+        return entered;
+    }
+
+    /** The click itself: the state entered, or null when the current state does not take it now. */
+    private String accept(long now, Actor a, int inputs) {
         ComboState cur = resolve(now, a);
         ComboState.Ctx c = ctx(a, now, inputs);
         String next = cur.next.apply(c);

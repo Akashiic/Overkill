@@ -5,6 +5,11 @@
 # Lâminas cortam jogadores?
 pvp: false
 
+# Memória de clique, como no Devil May Cry: um clique que chega no meio da janela de um golpe (quando o SlashBlade
+# o descartaria) fica guardado por estes ticks e sai no primeiro tick em que o golpe aceita. Deixa as sequências
+# fluidas com ping e quedas de FPS. 0 = o comportamento do SlashBlade (o clique adiantado se perde).
+buffer_de_clique: 6
+
 # Sons próprios do pack (overkill:corte, overkill:bainha...). Desligado: sons do vanilla parecidos.
 sons_proprios: false
 

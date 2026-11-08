@@ -16,7 +16,11 @@ linhas do código original, está em [`fidelidade/estudo/01-combo.md`](fidelidad
 | Frente, trás, lados, pulo, botão do meio, tecla especial | as teclas seguradas que o cliente Künftig manda (`KunftigInput.KEYS`) |
 | Chão / ar | o servidor (`isOnGround`) |
 
-Cliques no meio da janela de um golpe são **descartados**, sem fila (como no SlashBlade).
+Um clique no meio da janela de um golpe, que o SlashBlade descartaria, fica **guardado** por 6 ticks
+(`buffer_de_clique` no `config.yml`, como a memória de comando do Devil May Cry) e sai no primeiro tick em que o golpe
+aceita: um clique adiantado ainda encaixa o próximo golpe no menor tempo possível, e as sequências não quebram com ping
+ou quedas de FPS. Valem as teclas seguradas no clique; chão ou ar, o de agora. Um clique novo substitui o guardado; uma
+slash art, um pouso ou a troca de lâmina o esquecem. `buffer_de_clique: 0` volta ao SlashBlade puro.
 
 ## Tempo
 
