@@ -29,6 +29,8 @@ Overkill e o AkashicFishing juntos, e o cliente de desenvolvimento rodando o rot
 | Forja | ok (+1) |
 | O boss do AkashicFishing no mesmo Künftig | ok (escala, trava de voo, golpes, Ciranda) |
 
+![Com o Künftig mesclado: lock-on, combo B (28 hits, rank C), aéreo, Judgement Cut, Onda e Fio da Tempestade](capturas/teste-kunftig-mesclado.jpg)
+
 Na cópia de teste, `spawn-monsters` precisava estar ligado e a dificuldade acima de pacífica: com
 `spawn-monsters=false`, o Crucible não deixa nem o `/summon` criar o PigZombie, e o roteiro roda sem alvo.
 
