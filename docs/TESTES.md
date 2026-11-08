@@ -1,5 +1,48 @@
 # Testes no servidor
 
+## 2026-11-08: o cliente do modpack TEOF 5.1 no servidor do TEOF
+
+O cliente completo do pack (`TEOF-5.1-MANUAL.zip`: Forge 1614, 215 mods, Angelica, NecroTempus, Backhand) rodando
+aqui sem tela (Xvfb, Java 8), com o roteiro `overkill` do Künftig no lugar do Künftig do pack, entrando na cópia
+isolada do servidor completo.
+
+![O cliente do modpack: lock-on, combo B com rank e contador, aéreo B4, forja](capturas/teste-modpack-completo.jpg)
+
+| O quê | Resultado |
+|---|---|
+| Entrar no servidor | ok, depois de alinhar os mods (abaixo) |
+| Combo A, C (clique no fim do A2), B (clique no fim do A3) | ok, acertando o alvo (200 → 133 só nos três) |
+| Upperslash, rapid slash | ok |
+| Combo aéreo A1 → A2 → B3 → **B4**, aerial cleave até o pouso | ok, acertando |
+| Slash Arts: Judgement Cut, Corte Circular, Wave Edge | ok; a Onda Vertical saiu numa rodada e não na outra (o tempo do roteiro no cliente lento) |
+| Mira do lock-on, contador de golpes, HUD do rank (D → C), esfera do Judgement Cut | ok, desenhados com o Angelica |
+| Forja | ok (+1) |
+
+### O que o servidor precisa para o pack 5.1 entrar
+
+Sem isto, o cliente do pack é recusado ou expulso:
+
+| O quê | Por quê |
+|---|---|
+| **AkashicBellow 0.1.0-beta.7** e **VitaGenesis 0.1.0-beta.7** em `mods/` | o cliente recusa um servidor sem o AkashicBellow ("Rejecting connection SERVER: akashicbellow") |
+| **BaublesExpanded 2.2.26** (em `mods/1.7.10/`), **Omni Pipes** do pack, **Mirai 1.0-BETA** no lugar do Horizons of The Mirai 0.1.19 | o FML recusa versões diferentes ("Mod rejections") |
+| AE2 rv3-1093, Et Futurum 2.6.64, Hodgepodge 2.7.219, GTNHLib 0.11.54, Eln 1.24.8, adventurebackpack 1.4.28, AM2 CR23 + AM2PlayGround, ATM-Family 71db724, akashicmixer 01be1dc | as versões do pack |
+| **CastleOfStone**: liberar o `akashicthepatcher` | o anti-cheat expulsa quem tem o `!Akashic-ThePatcher-...HeldItemCullBox.jar`, que vem no próprio pack |
+| Künftig desta branch (API 9 com `pushVelocity`), Overkill, AkashicFishing | o Overkill pede a API 9 |
+
+Na cópia de teste também foram desligados o modo BungeeCord do `spigot.yml` e o ProtocolObelisk (as conexões vinham
+direto, sem o Velocity), e o jogador de teste ("Developer") estava banido no `banned-players.json` de produção.
+
+### Achados e correções
+
+* **A flutuação do combo aéreo chegava aos trancos.** O `setVelocity` do Bukkit só sai na atualização do rastreador
+  (a cada 2 ticks), e o vy medido pela diferença de posição alternava entre 0 e o dobro (as posições do cliente chegam
+  fora de fase com os ticks), então a regra do SlashBlade (age só com vy < 0) pulava um tick sim, outro não. Agora o
+  Künftig manda o movimento no mesmo tick (`KunftigPlayers.pushVelocity`) e o Overkill prevê o vy como o cliente
+  calcula. Conferido com o log `depuracao: true`: o jogador paira no A1-A2 e o B3 lança a 0,6.
+* **As janelas do combo B são de ~3 ticks** (as do SlashBlade). Com ping ou quedas de FPS, a rajada pode parar no
+  meio; é fiel ao original, mas um "buffer" de clique (como o DmC) deixaria mais tolerante.
+
 ## 2026-11-07: servidor do TEOF (Crucible) e servidor enxuto
 
 Os arquivos do servidor de produção (Crucible `1.7.10-staging-67b53034`, Java 21, 215 mods, 63 plugins), com o
