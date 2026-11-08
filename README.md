@@ -2,7 +2,7 @@
 
 O combate do **SlashBlade** (combos, slash arts, lock-on segurando Sneak, rank de concentração) no **Minecraft
 1.7.10**, como **plugin Bukkit** (Thermos/Crucible) + **resource pack**, desenhado pelo mod
-[Künftig](https://github.com/Akashiic/Kunftig) (API 9) no cliente. Katanas, efeitos e HUD com **arte própria**.
+[Künftig](https://github.com/Akashiic/Kunftig) (API 11) no cliente. Katanas, efeitos e HUD com **arte própria**.
 
 O servidor decide tudo: a máquina de combo (portada do SlashBlade: Resharped), os acertos, o dano, o knockback, o
 stun, as slash arts e o rank. O cliente com Künftig desenha a katana pelo motor de lâminas (OBJ + VMD), o corpo do
@@ -77,7 +77,7 @@ As teclas do Künftig ficam em **Controles → Kunftig**.
 ## Arquitetura
 
 ```
- Overkill (plugin)  --compileOnly-->  kunftig-api (API 9)
+ Overkill (plugin)  --compileOnly-->  kunftig-api (API 11)
    combo/          a máquina de combo do SlashBlade, pura e testada: estados, prioridades, janelas, linha do tempo,
                    comandos de raiz, carga e slash arts, rank de concentração
    core/           lâminas e progressão, puras e testadas: nível, estrela, forja (+1..+17, Ascensão), drops

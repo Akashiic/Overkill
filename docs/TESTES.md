@@ -1,5 +1,37 @@
 # Testes no servidor
 
+## 2026-11-08: o Künftig mesclado com a linha do AkashicFishing (API 11)
+
+A branch do Künftig feita para o Overkill (`claude/gifted-knuth-x0wf4k`) e a do AkashicFishing
+(`claude/kind-ride-ts9apr`) saíram do mesmo ponto da `main` e as duas chamavam suas adições de "API 9". Elas foram
+mescladas ([Akashiic/Kunftig#19](https://github.com/Akashiic/Kunftig/pull/19), commit `02d5d68`):
+
+* **Versões:** a 9 e a 10 ficaram com o AkashicFishing (escala, ossos e deslize das exibições, trava de voo; alcance da
+  boia). O que o Overkill usa virou a **API 11**: teclas, HUD, câmera, exibições que voam e giram, `ao_atacar`,
+  lâminas, efeitos e `pushVelocity`.
+* **O código do Overkill não muda:** ele confere `isAvailable()` de cada recurso, não o número da versão.
+* **Protocolo das exibições unificado:** a operação `MOTION` passou de 5 para 7 (a 5 é a `SCALE` do AkashicFishing).
+  Cliente e servidor precisam do Künftig mesclado; um cliente da branch antiga lê errado a rotação das exibições.
+* **CI:** o `kunftigRef` aponta para a branch mesclada; depois do merge da Akashiic/Kunftig#19, aponte para a `main`.
+
+**Teste** com o Künftig mesclado, no servidor enxuto (Crucible, UniMixins, lwjgl3ify, GeckoLib, Künftig), com o
+Overkill e o AkashicFishing juntos, e o cliente de desenvolvimento rodando o roteiro `overkill`:
+
+| O quê | Resultado |
+|---|---|
+| Künftig | API v11, todas as pontes (pesca, itens, partículas, jogadores, hologramas, varas 3D, exibições, entrada, tela, lâminas e efeitos) |
+| Overkill compilado contra a API mesclada | ok (testes passando) |
+| Combo A, C, B, upperslash, rapid slash | ok, acertando |
+| Combo aéreo A e B, aerial cleave | ok |
+| As quatro Slash Arts (Judgement Cut, Onda, Corte Circular, Fio da Tempestade) | ok, cada uma tirando vida |
+| Alvo (PigZombie com 200 de vida) | 200 → 3,9 ao longo do roteiro |
+| Mira do lock-on, HUD do rank (C), contador de golpes (28 hits) | ok |
+| Forja | ok (+1) |
+| O boss do AkashicFishing no mesmo Künftig | ok (escala, trava de voo, golpes, Ciranda) |
+
+Na cópia de teste, `spawn-monsters` precisava estar ligado e a dificuldade acima de pacífica: com
+`spawn-monsters=false`, o Crucible não deixa nem o `/summon` criar o PigZombie, e o roteiro roda sem alvo.
+
 ## 2026-11-08: o cliente do modpack TEOF 5.1 no servidor do TEOF
 
 O cliente completo do pack (`TEOF-5.1-MANUAL.zip`: Forge 1614, 215 mods, Angelica, NecroTempus, Backhand) rodando

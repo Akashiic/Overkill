@@ -4,7 +4,7 @@ Data do estudo: 2026-11-06.
 
 **Base de evidência.** Este estudo se apoia em: (a) a página do repositório `flammpfeil/SlashBlade_2` (apenas a fachada: não foi lido o código-fonte); (b) páginas públicas de mods (CurseForge, Modrinth e similares); (c) o `README.md`, o `docs/API.md` e o `docs/rodmodels/README.md` do Künftig (não foi lido o código-fonte do Künftig). Onde algo é inferência, está marcado como **a verificar**.
 
-> **Estado em 2026-11-06: implementado.** As lacunas da seção 4 viraram recursos da API 9 do Künftig e o plugin
+> **Estado em 2026-11-06: implementado.** As lacunas da seção 4 viraram recursos da API 9 do Künftig (API 11 depois da mescla com a linha do AkashicFishing, ver docs/TESTES.md) e o plugin
 > existe. Resumo do que virou cada uma:
 >
 > | # | Lacuna | Resultado |
