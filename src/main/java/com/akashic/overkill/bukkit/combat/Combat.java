@@ -225,7 +225,7 @@ public final class Combat implements Listener {
             flush(f);
         }
         bindKeys(f);
-        f.sampleMotion();
+        f.sampleMotion(now);
         boolean ground = f.onGround();
         if (ground && !f.wasOnGround) {
             f.fallDecreaseRate = 0;
