@@ -31,6 +31,16 @@ Overkill e o AkashicFishing juntos, e o cliente de desenvolvimento rodando o rot
 
 ![Com o Künftig mesclado: lock-on, combo B (28 hits, rank C), aéreo, Judgement Cut, Onda e Fio da Tempestade](capturas/teste-kunftig-mesclado.jpg)
 
+**Correção (2026-11-09): a katana não aparecia nesse teste.** Nas capturas acima não há katana na mão: a cópia de
+teste não tem os VMD (`movimento/motion.vmd` e `player_motion.vmd`, do pack da alfa, fora do repositório), e o motor de
+lâminas do Künftig não desenhava nada sem o movimento da lâmina. Não era a mesclagem: o código das lâminas é o mesmo da
+branch do Overkill, e ela faria igual sem os VMD. O Künftig agora desenha a katana mesmo sem eles (na mão direita,
+seguindo o braço, com a bainha na cintura; em primeira pessoa no canto da tela, com um corte simples a cada golpe), e
+os combos saem sem a animação da lâmina e do corpo. Com os VMD no pack, nada muda. Ainda falta conferir com o pack da
+alfa no cliente do dono.
+
+![Sem os VMD: a katana na mão em primeira pessoa e em terceira, nos combos A, C e B](capturas/katana-sem-vmd.jpg)
+
 Na cópia de teste, `spawn-monsters` precisava estar ligado e a dificuldade acima de pacífica: com
 `spawn-monsters=false`, o Crucible não deixa nem o `/summon` criar o PigZombie, e o roteiro roda sem alvo.
 

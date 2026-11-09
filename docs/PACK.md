@@ -36,7 +36,7 @@ Prévias no Blender: `arte/katanas/previa.py` (veja [`arte/katanas/README.md`](.
 
 Falha quando falta um arquivo que o `blades.json` cita, um modelo não tem os grupos que o motor desenha (`blade`,
 `blade_damaged`, `sheath`, `effect`, os ícones `item_*`; nos efeitos, `base`, `wind`, `ss`, os da mira), ou uma
-katana ou material da forja não tem ícone (ou um ícone do `item_models.json` não existe). A falta dos VMD só avisa: na alfa eles vêm do pack separado.
+katana ou material da forja não tem ícone (ou um ícone do `item_models.json` não existe). A falta dos VMD só avisa (na alfa eles vêm do pack separado): sem eles, o Künftig desenha a katana parada na mão e a bainha na cintura, e os combos saem sem a animação da lâmina e do corpo.
 
 ## A alfa
 
