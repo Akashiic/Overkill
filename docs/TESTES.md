@@ -1,5 +1,27 @@
 # Testes no servidor
 
+## 2026-11-10: Shift sem animação e sem lock-on (cliente com o Künftig do modpack)
+
+Relato do dono: com a katana, o Shift não fazia nada visível (sem animação do corpo, sem a mira do lock-on), mas as
+Slash Arts saíam. Não era a mesclagem do Künftig: o código dele fora do roteiro de testes é o mesmo do `e050294` ao
+`fb62f25` (o mais novo, junto com o AkashicFishing 1.12.1).
+
+**Causa:** um cliente com um Künftig mais antigo que a API 11 (o do TEOF 5.1 é o `f15bf62`, API 8). Ele entra no
+servidor sem nenhum aviso do FML, mas não registra `kunftig:blade`, `kunftig:camera`, `kunftig:hud` nem
+`kunftig:input`: o combate (no servidor) funciona, e o que o cliente desenha some, ou seja, a katana animada, o corpo,
+a câmera e a mira do lock-on, o HUD, e os comandos de tecla.
+
+| Cliente | Servidor | Resultado |
+|---|---|---|
+| Künftig `f15bf62` (do modpack) | Künftig novo, Overkill, AkashicFishing | entra; katana sem animação, Shift sem lock-on visível; o aviso novo (abaixo) aparece no chat e no log |
+| Künftig `fb62f25` (GitHub) | Künftig `fb62f25`, Overkill, AkashicFishing 1.12.1 | tudo: mira do lock-on, combos A, B e C animados, aéreos, upperslash, rapid slash, as quatro Slash Arts, rank e contador, forja |
+
+![Künftig fb62f25 nos dois lados: lock-on, combo A3, B7, aéreo B3, Judgement Cut, upperslash](capturas/teste-kunftig-fb62f25.jpg)
+
+**Aviso novo:** depois de 5 segundos com uma katana na mão, se o cliente não desenha as lâminas
+(`KunftigBlades.drawsBlades`), o Overkill avisa o jogador uma vez ("Seu Kunftig está desatualizado...") e loga quem
+foi. O mesmo jar do Künftig tem que estar no servidor e em todos os clientes.
+
 ## 2026-11-08: o Künftig mesclado com a linha do AkashicFishing (API 11)
 
 A branch do Künftig feita para o Overkill (`claude/gifted-knuth-x0wf4k`) e a do AkashicFishing

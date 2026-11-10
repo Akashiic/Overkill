@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -84,6 +85,8 @@ public final class Combat implements Listener {
     public static final String NS = "overkill";
     /** Ticks the hit counter keeps counting after the last hit (the client hides it at the same time). */
     static final int HITS_WINDOW = 60;
+    /** Ticks with a katana in hand before an outdated client is reported (the channels register after login). */
+    static final int CLIENT_GRACE_TICKS = 100;
     /** Ticks between writes of a fight's changes to the item (a level up is written at once). */
     static final int FLUSH_TICKS = 20;
     /** The longest a change waits for a pause in the fight. */
@@ -246,6 +249,7 @@ public final class Combat implements Listener {
             flush(f);
         }
         bindKeys(f);
+        checkClient(f, now);
         f.sampleMotion(now);
         boolean ground = f.onGround();
         if (ground && !f.wasOnGround) {
@@ -281,6 +285,29 @@ public final class Combat implements Listener {
         fighters.put(p.getUniqueId(), f);
         bindKeys(f);
         return f;
+    }
+
+    /**
+     * A client whose Kunftig does not draw the blades (the modpack's own, older than API 11) still fights, since the
+     * combat is on the server, but has no blade or body animation, no lock-on camera or reticle and no held keys. The
+     * player is told once, after a grace for the channels to register at login, and the server logs it.
+     */
+    private void checkClient(Fighter f, long now) {
+        if (f.heldSince < 0) {
+            f.heldSince = now;
+        }
+        if (f.clientWarned || now - f.heldSince < CLIENT_GRACE_TICKS || KunftigBlades.drawsBlades(f.player)) {
+            return;
+        }
+        f.clientWarned = true;
+        f.player.sendMessage("");
+        f.player.sendMessage(ChatColor.RED + "Seu Kunftig está desatualizado: a katana corta, mas sem animação, sem"
+            + " lock-on e sem os comandos de tecla. Instale no seu cliente o mesmo Kunftig do servidor (API 11 ou mais"
+            + " nova) e ative o resource pack do Overkill.");
+        f.player.sendMessage("");
+        plugin.getLogger()
+            .warning(f.player.getName() + " empunhou uma katana com um cliente sem as lâminas do Kunftig (sem o canal"
+                + " kunftig:blade): o Kunftig do cliente é mais antigo que a API 11.");
     }
 
     /** The held keys, once the client listens (it may register the channel after the blade is already in hand). */

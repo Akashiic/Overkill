@@ -41,6 +41,10 @@ final class Fighter implements Actor {
     boolean using;
     long lastClick = -1;
     boolean keysBound;
+    /** First tick with a katana in hand (for the outdated-client check), or -1. */
+    long heldSince = -1;
+    /** The player was told his Kunftig does not draw the blades. */
+    boolean clientWarned;
 
     double prevX;
     double prevY;
